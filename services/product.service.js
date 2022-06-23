@@ -22,8 +22,8 @@ module.exports = class ProductService extends BaseService {
       files.map((file) => {
         // let img = fs.readFileSync(file.path)
         console.log('this is path', file.destination)
-        const path = file.destination.split('server\\')[1]
-        const newPath = path.split('\\').join('/')
+        // const path = file.destination.split('server\\')[1]
+        // const newPath = path.split('\\').join('/')
         imageList.push(file.destination + "/" + file.filename)
       })
       const product = {cate_id, mate_id, name, price, unitsinstock, description, imageList}
