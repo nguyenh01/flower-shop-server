@@ -63,7 +63,6 @@ module.exports = class ShoppingCartService extends BaseService {
       }
       const existProductInShoppingCart = await ShoppingCartDetail.findOne({shoppingCart_id: shoppingCart._id, product_id: product_id})
       if (existProductInShoppingCart) {
-        console.log('hello')
         shoppingCartDetail = await ShoppingCartDetail.findOneAndUpdate({shoppingCart_id:shoppingCart._id, product_id:product_id}, 
           { quantity: existProductInShoppingCart.quantity + quantity, total: existProductInShoppingCart.total + quantity * productInfo.price}, {new: true})
       } else {

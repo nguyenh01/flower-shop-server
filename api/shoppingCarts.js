@@ -32,7 +32,6 @@ module.exports = (router) => {
       try{
           const {product_id} = req.body
           const cus_id = req.payload.id
-          console.log('here')
           const result = await ShoppingCartService.deleteShoppingCartDetail({product_id, cus_id});
           if (result) {
             return res.status(200).json ({msg: "Xóa thành công"})
