@@ -95,4 +95,12 @@ module.exports = class ShoppingCartService extends BaseService {
       console.log(e.message)
     }
   }
+
+  async updateShoppingCartStatus (cus_id) {
+    try {
+        await ShoppingCart.findOneAndUpdate({cus_id: cus_id}, {status: true})
+    } catch (e) {
+      console.log(e.message)
+    }
+  }
 }

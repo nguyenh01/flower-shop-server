@@ -37,5 +37,17 @@ module.exports = (router) => {
 				console.log(error)
         next(error);
       }
+    }),
+    router.put('/',
+    async (req, res, next) => {
+      try {
+        return res.status(200).json({ 
+          data: result
+        })
+      }
+      catch(error) {
+				console.log(error)
+        next(error);
+      }
     })
 }

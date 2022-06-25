@@ -92,4 +92,30 @@ module.exports = class ProductService extends BaseService {
     return result
   }
 
+  async updateProduct(productInfo, files) {
+    const {id, cate_id, mate_id, name, price, unitsinstock, description} = productInfo
+    let imageList = []
+    console.log('this is', files)
+    if (!files) {
+      const error = new Error('Please choose file');
+      error.httpStatusCode = 400;
+      return
+    }
+    files.map((file) => {
+      const path = file.destination.split('/app/')[1]
+      imageList.push(path + "/" + file.filename)
+    })
+    let productUpdateInfo = {
+      cate_id,
+      mate_id,
+      name,
+      price,
+      unitsinstock, 
+      description
+    }
+    if (imageList.length > 0) {
+      productUpdateInfo['imageList'] = imageList
+    }
+    return await Product.findOneAndUpdate({_id: id}, productUpdateInfo)
+  }
 }

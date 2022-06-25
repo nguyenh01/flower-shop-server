@@ -5,6 +5,7 @@ const createError = require('http-errors');
 const BaseService = require('./base.service')
 const ShipFeeService = require('./shipFee.service').getInstance()
 const ProductService = require('./product.service').getInstance()
+const ShoppingCartService = require('./shoppingCart.service').getInstance()
 const Product = require('../models/product.model.js')
 const Order = require('../models/order.model.js')
 const OrderDetail = require('../models/orderDetail.model.js')
@@ -68,7 +69,7 @@ module.exports = class OrderService extends BaseService {
             ward_code: to_ward_code
         })
         //End==Create Order//
-        console.log('this productInfo', productInfo)
+        
 
     //Begin==Create OrderDetail//
     products.forEach(product => {
@@ -77,6 +78,8 @@ module.exports = class OrderService extends BaseService {
             quantity:product.quantity,
         })
     });
+
+    ShoppingCartService.updateShoppingCartStatus()
 
 
     return "Giao dịch thành công";
