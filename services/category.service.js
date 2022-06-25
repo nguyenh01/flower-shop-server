@@ -34,4 +34,9 @@ module.exports = class CategoryService extends BaseService {
     return result
   }
 
+  async update (categoryInfo) {
+    const {_id, name, description} = categoryInfo;
+    return await Category.updateOne({_id: _id}, {name, description})
+  }
+
 }

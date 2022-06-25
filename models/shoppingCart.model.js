@@ -8,14 +8,6 @@ let ShoppingCartSchema = new schema ({
     cus_id:{
         type: String,
         required: true
-    },
-    description: {
-        type: String,
-        required: false
-    },
-    status: {
-        type: Boolean,
-        required: true
     }
 });
 

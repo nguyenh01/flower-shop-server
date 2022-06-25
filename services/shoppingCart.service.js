@@ -11,7 +11,7 @@ module.exports = class ShoppingCartService extends BaseService {
 
   async getShoppingCartByCus (cus_id) {
     try {
-      return await ShoppingCart.findOne({cus_id:cus_id,status:false});
+      return await ShoppingCart.findOne({cus_id:cus_id});
     }
     catch(err) {
       console.log(err.message)
@@ -24,7 +24,7 @@ module.exports = class ShoppingCartService extends BaseService {
         const is_delete_shoppingCartDetail = await ShoppingCartDetail.deleteOne({cus_id: cus_id})
         return is_delete_shoppingCartDetail
       } else {
-        const shopping_cart_id = (await ShoppingCart.findOne({cus_id: cus_id, status: false}))._id.toString()
+        const shopping_cart_id = (await ShoppingCart.findOne({cus_id: cus_id}))._id.toString()
         const is_delete_shoppingCart = await ShoppingCart.findByIdAndDelete(shopping_cart_id)
         const is_delete_shoppingCartDetail = await ShoppingCartDetail.deleteMany({shoppingCart_id: shopping_cart_id})
         return {is_delete_shoppingCart, is_delete_shoppingCartDetail}
@@ -58,7 +58,6 @@ module.exports = class ShoppingCartService extends BaseService {
       {
         shoppingCart = await ShoppingCart.create({
           cus_id:cus_id,
-          status:false
         });
       }
       const existProductInShoppingCart = await ShoppingCartDetail.findOne({shoppingCart_id: shoppingCart._id, product_id: product_id})
@@ -86,7 +85,7 @@ module.exports = class ShoppingCartService extends BaseService {
 
   async updateProduct (cus_id, carts) {
     try {
-      const shoppingCartInfo = await ShoppingCart.findOne({cus_id: cus_id, status: false})
+      const shoppingCartInfo = await ShoppingCart.findOne({cus_id: cus_id})
       carts.forEach(async function(cart) {
         const productInfo = await Product.findOne({_id: cart.product_id})
         await ShoppingCartDetail.findOneAndUpdate({shoppingCart_id: shoppingCartInfo._id.toString(), product_id: cart.product_id}, {quantity: cart.quantity, total: productInfo.price * cart.quantity})
@@ -96,11 +95,5 @@ module.exports = class ShoppingCartService extends BaseService {
     }
   }
 
-  async updateShoppingCartStatus (cus_id) {
-    try {
-        await ShoppingCart.findOneAndUpdate({cus_id: cus_id}, {status: true})
-    } catch (e) {
-      console.log(e.message)
-    }
-  }
+
 }

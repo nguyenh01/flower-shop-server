@@ -1,17 +1,17 @@
-const multer = require('multer')
+// const multer = require('multer')
+const moment = require('moment')
 // const upload = multer({ dest: '../public/assets/images/products/uploads/' })
-const fetch = require('node-fetch')
-const store = require('../middlewares/multer')
-const validator = require('../middlewares/validator')
+// const fetch = require('node-fetch')
+// const validator = require('../middlewares/validator')
 const ProductService = require('../services/product.service').getInstance()
 const ShipFeeService = require('../services/shipFee.service').getInstance()
 const Product = require('../models/product.model.js')
 const Order = require('../models/order.model.js')
 const OrderDetail = require('../models/orderDetail.model.js')
-const Token = process.env.SHOP_ADDRESS_TOKEN
-const ShopId = process.env.SHOP_ID
-const from_district_id = process.env.FROM_DISTRICT_ID
-const service_type_id = process.env.SERVICE_TYPE_ID
+// const Token = process.env.SHOP_ADDRESS_TOKEN
+// const ShopId = process.env.SHOP_ID
+// const from_district_id = process.env.FROM_DISTRICT_ID
+// const service_type_id = process.env.SERVICE_TYPE_ID
 
 module.exports = (router) => { 
   router.post('/create', async (req, res, next) => {
@@ -59,7 +59,7 @@ module.exports = (router) => {
 				address: address,
 				email: email,
 				employee_id: "",
-				order_date: new Date(),
+				order_date: moment().format('DD/MM/YYYY'),
 				ship_date: "",
 				ship_fee: shipFee,
 				product_fee: total_fee - shipFee,
@@ -70,20 +70,22 @@ module.exports = (router) => {
 				ward_code: to_ward_code
 			})
 
-		//End==Create Order//
+			//End==Create Order//
 
-		//Begin==Create OrderDetail//
-		products.forEach(product => {
-			OrderDetail.create({
-				order_id: orderInfo._id.toString(),
-				product_id: product.id,
-				quantity:product.quantity,
-			})
-		});
+			//Begin==Create OrderDetail//
+			products.forEach(product => {
+				OrderDetail.create({
+					order_id: orderInfo._id.toString(),
+					product_id: product.id,
+					quantity:product.quantity,
+				})
+			});
+			if (customer_id) {
+				ShoppingCartService.deleteShoppingCartDetail({cus_id: customer_id})
+			}
 
-
-		return res.json({msg:"Giao dịch thành công"});
-			//End == Create order //
+			return res.json({msg:"Giao dịch thành công"});
+				//End == Create order //
 		}
 		catch (err) {
 			console.log(err.message)

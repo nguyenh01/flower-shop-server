@@ -28,10 +28,6 @@ let ShoppingCartDetailSchema = new schema ({
   total: {
     type: Number,
     required: false,
-  },
-  imageList: {
-    type: [String],
-    required: false
   }
 });
 

@@ -358,7 +358,7 @@ module.exports = (router) => {
         const user = await UserService.get(userId);
 
         var token = jwt.sign(
-          { id: result._id },
+          { id: result._id, type: user.type },
           process.env.ACCESS_TOKEN_SECRET,
           {
             expiresIn: 86400, // expires in 24 hours

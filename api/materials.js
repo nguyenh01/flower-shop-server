@@ -41,8 +41,9 @@ module.exports = (router) => {
     router.put('/',
     async (req, res, next) => {
       try {
+        await MaterialService.update(req.body)
         return res.status(200).json({ 
-          data: result
+          msg: "Cập nhật thành công"
         })
       }
       catch(error) {

@@ -32,4 +32,8 @@ module.exports = class MaterialService extends BaseService {
     return result
   }
 
+  async update (materialInfo) {
+    const {_id, name, description} = materialInfo;
+    return await Material.updateOne({_id: _id}, {name, description})
+  }
 }

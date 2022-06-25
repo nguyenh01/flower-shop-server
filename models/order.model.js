@@ -68,6 +68,10 @@ let OrderSchema = new schema({
     ward_code: {
       type: String,
       require:true
+    },
+    completed_date: {
+      type: String,
+      require: true
     }
 });
 

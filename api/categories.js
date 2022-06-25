@@ -38,4 +38,17 @@ module.exports = (router) => {
         next(error);
       }
     })
+    router.put('/',
+    async (req, res, next) => {
+      try {
+        await CategoryService.update(req.body)
+        return res.status(200).json({ 
+          msg: "Cập nhật thành công"
+        })
+      }
+      catch(error) {
+				console.log(error)
+        next(error);
+      }
+    })
 }
