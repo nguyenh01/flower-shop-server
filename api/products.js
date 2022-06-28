@@ -40,17 +40,18 @@ module.exports = (router) => {
       const size = parseInt(req.query.size);
       const cate_id = req.query.cate_id?.split(",");
       const mate_id = req.query.mate_id?.split(",");
-      const order_by = req.query.order_by;
+      const { order_by, name, sort, direction } = req.query;
       const is_instock = req.query.is_instock?.split(",")
-      const name = req.query.name;
       const result = await ProductService.get({
         order_by,
         is_instock,
         mate_id,
         cate_id,
         name,
-        page: page,
-        size: size,
+        page,
+        size,
+        sort,
+        direction,
       });
       return res.status(200).json({
         data: result,
@@ -75,6 +76,20 @@ module.exports = (router) => {
       const result = await ProductService.updateProduct(req.body, req.files);
       if (result) {
         return res.status(200).json({msg: "Cập nhật thành công"});
+      }
+      return res.status(400).json({msg: "Lỗi người dùng"})
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  })
+
+  router.delete("/:id", async (req, res, next) => {
+    try {
+      const id = req.params
+      const result = await ProductService.delete(id);
+      if (result) {
+        return res.status(200).json({msg: "Xóa thành công"});
       }
       return res.status(400).json({msg: "Lỗi người dùng"})
     } catch (error) {

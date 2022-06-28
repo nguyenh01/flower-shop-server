@@ -34,11 +34,11 @@ module.exports = class ProductService extends BaseService {
     }
   }
 
-  async get ({cate_id, mate_id, name, page, size, order_by, is_instock}) {
+  async get ({cate_id, mate_id, name, page, size, order_by, is_instock, sort, direction}) {
     const pageParam = page ? page : 1
     const sizeParam = size ? size : 9
     let filters = {}
-    let sort = {}
+    let sorts = {}
 
     if (cate_id) {
       filters['cate_id'] = {$in: cate_id}
@@ -57,24 +57,38 @@ module.exports = class ProductService extends BaseService {
     if(name) {
       filters['name'] = {$regex : new RegExp(name, "i")}
     }
-    switch(order_by) {
-      case 'z-a':
-        sort['name'] = -1;
-        break;
-      case 'low':
-        sort['price'] = 1;
-        break;
-      case 'high':
-        sort['price'] = -1;
-        break;
-      default:
-        sort['name'] = 1;
-        break;
+    if (sort && direction) {
+      switch(direction) {
+        case 'desc':
+          sorts[sort] = -1;
+          break;
+        case 'asc':
+          sorts[sort] = 1;
+          break;
+        default:
+          sorts['name'] = 1;
+          break;
+      }
+    } else {
+      switch(order_by) {
+        case 'z-a':
+          sorts['name'] = -1;
+          break;
+        case 'low':
+          sorts['price'] = 1;
+          break;
+        case 'high':
+          sorts['price'] = -1;
+          break;
+        default:
+          sorts['name'] = 1;
+          break;
+      }
     }
 
     const skip = (pageParam - 1) * sizeParam
-    const total = await Product.find(filters).sort(sort)
-    const result = await Product.find(filters).sort(sort).skip(skip).limit(sizeParam);
+    const total = await Product.find(filters).sort(sorts)
+    const result = await Product.find(filters).sort(sorts).skip(skip).limit(sizeParam);
     let number_page = 0
     if (total.length/sizeParam - total.length%sizeParam >= 0.5)
     {
@@ -117,5 +131,15 @@ module.exports = class ProductService extends BaseService {
       productUpdateInfo['imageList'] = imageList
     }
     return await Product.findOneAndUpdate({_id: id}, productUpdateInfo)
+  }
+
+  async delete(id) {
+    try {
+      await Product.deleteOne({_id: id})
+      return "Xóa thành công"
+    } catch (err)
+    {
+      throw new Error(err)
+    }
   }
 }
