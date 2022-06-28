@@ -18,9 +18,10 @@ module.exports = class MaterialService extends BaseService {
     return materialCreate
   }
 
-  async get ({page = 1, size = 9, _id, name, sort, direction, is_paging = false, num = 3}) {
+  async get ({page = 1, size = 9, _id, name, sort, direction, is_paging = true, num = 3}) {
     const pageParam = parseInt(page)
     const sizeParam = parseInt(size)
+    const is_pagingParam = JSON.parse(is_paging)
     let result
     // Get by id
     if (_id) {
@@ -49,7 +50,7 @@ module.exports = class MaterialService extends BaseService {
         filters['name'] = {$regex : new RegExp(name, "i")}
       }
       const total = await Material.find(filters).sort(sorts)
-      if (is_paging) {
+      if (is_pagingParam) {
         const skip = (pageParam - 1) * sizeParam
         result = await Material.find(filters).sort(sorts).skip(skip).limit(sizeParam);
         let number_page = 0

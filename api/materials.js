@@ -26,7 +26,7 @@ module.exports = (router) => {
       }
     }),
 
-    router.get('/get',
+    router.get('/',
     async (req, res, next) => {
       try {
         const result = await MaterialService.get(req.query)

@@ -18,10 +18,11 @@ module.exports = class CategoryService extends BaseService {
     return categoryCreate
   }
 
-  async get ({page, size, _id, name, sort, direction, is_paging = false}) {
+  async get ({page, size, _id, name, sort, direction, is_paging = true}) {
     let result
     const pageParam = parseInt(page)
     const sizeParam = parseInt(size)
+    const is_pagingParam = JSON.parse(is_paging)
     // Get by id
     if (_id) {
       result = await Category.findById(_id)
@@ -49,7 +50,7 @@ module.exports = class CategoryService extends BaseService {
       filters['name'] = {$regex : new RegExp(name, "i")}
     }
     const total = await Category.find(filters).sort(sorts)
-    if (is_paging) {
+    if (is_pagingParam) {
       const skip = (page - 1) * size
       result = await Category.find(filters).sort(sorts).skip(skip).limit(size);
       let number_page = 0
