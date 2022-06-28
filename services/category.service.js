@@ -11,27 +11,62 @@ module.exports = class CategoryService extends BaseService {
 
   async create (categoryInfo) {
     const {name, description} = categoryInfo;
-    console.log('dsadsadsadsadsa')
     const categoryCreate = await Category.create({
       name: name,
       description: description,
     });
-    console.log('this is cấdsasa', categoryCreate)
     return categoryCreate
   }
 
-  async get (categoryInfo) {
-    const {_id} = categoryInfo;
+  async get ({page, size, _id, name, sort, direction, is_paging = false}) {
     let result
+    const pageParam = parseInt(page)
+    const sizeParam = parseInt(size)
+    // Get by id
     if (_id) {
-       result = await Category.findById(_id)
-    }
-    else {
-      let filters = {}
-      result = await Category.find(filters)
+      result = await Category.findById(_id)
+      return result
+   }
+   // List all
+   else {
+    let sorts = {}
+    let filters = {}
+    if (sort && direction) {
+      switch(direction) {
+        case 'desc':
+          sorts[sort] = -1;
+          break;
+        case 'asc':
+          sorts[sort] = 1;
+          break;
+        default:
+          sorts['name'] = 1;
+          break;
+      }
     }
 
-    return result
+    if (name) {
+      filters['name'] = {$regex : new RegExp(name, "i")}
+    }
+    const total = await Category.find(filters).sort(sorts)
+    if (is_paging) {
+      const skip = (page - 1) * size
+      result = await Category.find(filters).sort(sorts).skip(skip).limit(size);
+      let number_page = 0
+      if (total.length/size - total.length%size >= 0.5)
+      {
+          number_page = Math.ceil(parseInt((total.length / size - 0.5))) + 1
+      }
+      else
+      {
+          number_page = Math.ceil((total.length/size))
+      }
+      return {result, page_size: size, total_element: total.length, total_page: number_page, page: page}
+    } else {
+      result = total
+      return result
+    }
+    }
   }
 
   async update (categoryInfo) {

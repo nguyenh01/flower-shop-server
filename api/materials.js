@@ -25,10 +25,11 @@ module.exports = (router) => {
         next(error);
       }
     }),
+
     router.get('/get',
     async (req, res, next) => {
       try {
-        const result = await MaterialService.get(req.body)
+        const result = await MaterialService.get(req.query)
         return res.status(200).json({ 
           data: result
         })
@@ -38,6 +39,7 @@ module.exports = (router) => {
         next(error);
       }
     }),
+
     router.put('/',
     async (req, res, next) => {
       try {
