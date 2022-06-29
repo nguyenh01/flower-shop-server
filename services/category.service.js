@@ -18,7 +18,7 @@ module.exports = class CategoryService extends BaseService {
     return categoryCreate
   }
 
-  async get ({page, size, _id, name, sort, direction, is_paging = true}) {
+  async get ({page = 1, size = 9, _id, name, sort, direction, is_paging = true}) {
     let result
     const pageParam = parseInt(page)
     const sizeParam = parseInt(size)
@@ -51,18 +51,18 @@ module.exports = class CategoryService extends BaseService {
     }
     const total = await Category.find(filters).sort(sorts)
     if (is_pagingParam) {
-      const skip = (page - 1) * size
-      result = await Category.find(filters).sort(sorts).skip(skip).limit(size);
+      const skip = (pageParam - 1) * sizeParam
+      result = await Category.find(filters).sort(sorts).skip(skip).limit(sizeParam);
       let number_page = 0
-      if (total.length/size - total.length%size >= 0.5)
+      if (total.length/sizeParam - total.length%sizeParam >= 0.5)
       {
-          number_page = Math.ceil(parseInt((total.length / size - 0.5))) + 1
+          number_page = Math.ceil(parseInt((total.length / sizeParam - 0.5))) + 1
       }
       else
       {
-          number_page = Math.ceil((total.length/size))
+          number_page = Math.ceil((total.length/sizeParam))
       }
-      return {result, page_size: size, total_element: total.length, total_page: number_page, page: page}
+      return {result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
     } else {
       result = total
       return result
