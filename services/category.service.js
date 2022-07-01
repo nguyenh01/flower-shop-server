@@ -23,6 +23,7 @@ module.exports = class CategoryService extends BaseService {
     const pageParam = parseInt(page)
     const sizeParam = parseInt(size)
     const is_pagingParam = JSON.parse(is_paging)
+    console.log('this is', _id)
     // Get by id
     if (_id) {
       result = await Category.findById(_id)

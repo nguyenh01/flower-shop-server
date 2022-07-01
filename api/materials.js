@@ -42,6 +42,21 @@ module.exports = (router) => {
     }
   }),
 
+  router.get('/:id',
+  async (req, res, next) => {
+    try {
+      const _id = req.params.id
+      const result = await MaterialService.get({_id})
+      return res.status(200).json({ 
+        data: result
+      })
+    }
+    catch(error) {
+      console.log(error)
+      next(error);
+    }
+  }),
+
   router.put('/',
   async (req, res, next) => {
     try {
