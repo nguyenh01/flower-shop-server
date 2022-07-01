@@ -1,5 +1,6 @@
 const validator = require('../middlewares/validator')
 const CategoryService = require('../services/category.service').getInstance()
+const ProductService = require('../services/product.service').getInstance()
 
 module.exports = (router) => { 
   router.post('/create',
@@ -50,6 +51,32 @@ module.exports = (router) => {
       }
       catch(error) {
 				console.log(error)
+        next(error);
+      }
+    }),
+
+    router.delete('/:id',
+    async (req, res, next) => {
+      try {
+        const id = req.params.id
+        console.log('this is id', id)
+        const isExistedProducts = await ProductService.get({
+          mate_id: id
+        })
+        console.log(isExistedProducts)
+        if (isExistedProducts.result.length > 0) {
+          return res.status(400).json({ 
+            msg: "Không thể xóa chất liệu sản phẩm này vì có một số sản phẩm thuộc chất liệu này!!!",
+            products:  isExistedProducts.result
+          })
+        }
+        const result = await CategoryService.delete(id) 
+        return res.status(200).json({ 
+          data: result
+        })
+      }
+      catch(error) {
+        console.log(error)
         next(error);
       }
     })

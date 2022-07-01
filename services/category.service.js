@@ -75,4 +75,8 @@ module.exports = class CategoryService extends BaseService {
     return await Category.updateOne({_id: _id}, {name, description})
   }
 
+  async delete (id) {
+    return await Category.deleteOne({_id: id})
+  }
+
 }

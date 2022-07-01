@@ -46,6 +46,7 @@ module.exports = class ProductService extends BaseService {
     if (mate_id) {
       filters['mate_id'] = {$in: mate_id}
     }
+    console.log(filters)
     if (is_instock?.length == 1) {
       if (JSON.parse(is_instock[0]) === true) {
         filters['unitsinstock'] = {$gte: 1}

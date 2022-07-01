@@ -3,6 +3,7 @@
 const createError = require('http-errors');
 const BaseService = require('./base.service')
 const Material = require('../models/material.model.js')
+const ProductService = require('../services/product.service').getInstance()
 
 module.exports = class MaterialService extends BaseService {
   constructor(){
@@ -73,5 +74,9 @@ module.exports = class MaterialService extends BaseService {
   async update (materialInfo) {
     const {_id, name, description} = materialInfo;
     return await Material.updateOne({_id: _id}, {name, description})
+  }
+
+  async delete (id) {
+    return await Material.deleteOne({_id: id})
   }
 }
