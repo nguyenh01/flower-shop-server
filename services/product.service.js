@@ -139,7 +139,7 @@ module.exports = class ProductService extends BaseService {
     try {
       const productInfo = Product.findById(id)
       productInfo?.imageList?.forEach(async element => {
-        await fs.unlink(element);        
+        return await fs.unlink(element);        
       });
       await Promise.all([ShoppingCartDetail.deleteMany({product_id: id}), Product.deleteOne({_id: id})])
       return "Xóa thành công"
