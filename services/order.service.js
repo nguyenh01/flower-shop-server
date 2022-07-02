@@ -14,6 +14,7 @@ module.exports = class OrderService extends BaseService {
   constructor(){
     super()
   }
+
   async create(OrderInfo) {
     try {
       //Begin == Create order//
@@ -29,7 +30,6 @@ module.exports = class OrderService extends BaseService {
       if(item!=null)
       {
         products = item
-        console.log('this is products', products)
         
         for(let i = 0; i < products.length; i++)
         {
