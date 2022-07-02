@@ -382,6 +382,11 @@ module.exports = (router) => {
     }
   );
 
+  router.get('/logout', function(req, res) {
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.status(200).json({ auth: false, token: null });
+  });
+
   router.get("/me", authorize.verifyAccessToken, async (req, res, next) => {
     try {
       const _id = req.payload.id;
