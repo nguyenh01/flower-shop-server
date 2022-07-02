@@ -4,6 +4,7 @@ const moment = require('moment')
 const createError = require('http-errors');
 const BaseService = require('./base.service')
 const Product = require('../models/product.model.js')
+const ShoppingCartDetail = require('../models/shoppingCartDetail.model.js');
 
 module.exports = class ProductService extends BaseService {
   constructor(){
@@ -136,7 +137,11 @@ module.exports = class ProductService extends BaseService {
 
   async delete(id) {
     try {
-      await Product.deleteOne({_id: id})
+      const productInfo = Product.findById(id)
+      productInfo?.imageList?.forEach(async element => {
+        await fs.unlink(element);        
+      });
+      await Promise.all([ShoppingCartDetail.deleteMany({product_id: id}), Product.deleteOne({_id: id})])
       return "Xóa thành công"
     } catch (err)
     {

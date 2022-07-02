@@ -76,7 +76,7 @@ module.exports = (router) => {
         const id = req.params.id
         console.log('this is id', id)
         const isExistedProducts = await ProductService.get({
-          cate_te: id
+          cate_id: id
         })
         console.log(isExistedProducts)
         if (isExistedProducts.result.length > 0) {
