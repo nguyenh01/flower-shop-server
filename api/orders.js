@@ -9,12 +9,13 @@ const Product = require('../models/product.model.js')
 const Order = require('../models/order.model.js')
 const OrderDetail = require('../models/orderDetail.model.js')
 const OrderService = require('../services/order.service').getInstance()
+const authorize = require("../middlewares/authorize.js");
 
 module.exports = (router) => { 
-  router.post('/create', async (req, res, next) => {
+  router.post('/create', authorize.verifyAccessToken, async (req, res, next) => {
 		try {
-			const result = await OrderService.create(req.body)
-			console.log('this is result', result)
+			const user_id = req.payload?.id;
+			const result = await OrderService.create({...req.body, id_customer: user_id})
 			if (result.is_completed) {
 				return res.status(200).json({msg:result.msg})
 			}

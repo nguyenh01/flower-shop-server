@@ -17,6 +17,7 @@ module.exports = class OrderService extends BaseService {
 
   async create(OrderInfo) {
     try {
+      console.log('hello')
       //Begin == Create order//
       const {note, first_name, last_name, phone, address, to_district_id, to_ward_code, item, email, id_customer} = OrderInfo //id_customer đăng nhập thì truyền
       const to_district_id_param = parseInt(to_district_id)
@@ -80,7 +81,11 @@ module.exports = class OrderService extends BaseService {
         })
       });
       if (id_customer_main) {
-        ShoppingCartService.deleteShoppingCartDetail({cus_id: id_customer_main})
+        console.log('this is id', id_customer_main)
+        ShoppingCartService.deleteShoppingCartByUserId({cus_id: id_customer_main})
+        const shoppingCartID = (await ShoppingCartService.getShoppingCartByCusId({cus_id:id_customer_main}))._id.toString()
+        console.log(shoppingCartID)
+        ShoppingCartService.deleteShoppingCartDetailBySCId({shoppingCart_id: shoppingCartID})
       }
 
       return {is_completed: true, msg: "Giao dịch thành công"}

@@ -9,9 +9,12 @@ module.exports = class ShoppingCartService extends BaseService {
     super()
   }
 
-  async getShoppingCartByCus (cus_id) {
+  async getShoppingCartByCusId (cusInfo) {
     try {
-      return await ShoppingCart.findOne({cus_id:cus_id});
+      console.log('helololo', typeof cusInfo.cus_id)
+      const result =  await ShoppingCart.findOne({cus_id:cusInfo.cus_id});
+      console.log('this is result', result)
+      return result
     }
     catch(err) {
       console.log(err.message)
@@ -24,11 +27,31 @@ module.exports = class ShoppingCartService extends BaseService {
         const is_delete_shoppingCartDetail = await ShoppingCartDetail.deleteOne({cus_id: cus_id})
         return is_delete_shoppingCartDetail
       } else {
-        const shopping_cart_id = (await ShoppingCart.findOne({cus_id: cus_id}))._id.toString()
+        const shopping_cart_id = (await ShoppingCart.findOne({cus_id: cus_id})).cus_id
+        console.log('hehehehehehehe', shopping_cart_id)
+        return 
         const is_delete_shoppingCart = await ShoppingCart.findByIdAndDelete(shopping_cart_id)
         const is_delete_shoppingCartDetail = await ShoppingCartDetail.deleteMany({shoppingCart_id: shopping_cart_id})
         return {is_delete_shoppingCart, is_delete_shoppingCartDetail}
       }
+    }
+    catch(err) {
+      console.log(err.message)
+    }
+  }
+
+  async deleteShoppingCartByUserId ({cus_id}) {
+    try {
+        return await ShoppingCart.deleteOne({cus_id: cus_id})
+    }
+    catch(err) {
+      console.log(err.message)
+    }
+  }
+
+  async deleteShoppingCartDetailBySCId ({shoppingCart_id}) {
+    try {
+        return await ShoppingCart.deleteMany({shoppingCart_id: shoppingCart_id})
     }
     catch(err) {
       console.log(err.message)
