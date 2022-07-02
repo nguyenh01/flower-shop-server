@@ -38,7 +38,7 @@ module.exports = class OrderService extends BaseService {
           {
             return {is_completed: false, msg:"Không đủ số lượng sản phẩm"}
           }
-          productInfo = await ProductService.getById(products[i].id)
+          const productInfo = await ProductService.getById(products[i].id)
           product_list_info.push(productInfo)
           total_fee += productInfo?.price * products[i].quantity
         }
@@ -79,14 +79,15 @@ module.exports = class OrderService extends BaseService {
           quantity:product.quantity,
         })
       });
-      if (customer_id) {
-        ShoppingCartService.deleteShoppingCartDetail({cus_id: customer_id})
+      if (id_customer_main) {
+        ShoppingCartService.deleteShoppingCartDetail({cus_id: id_customer_main})
       }
 
       return {is_completed: true, msg: "Giao dịch thành công"}
     //End == Create order //
     }
     catch (err) {
+      console.log(err.message)
       throw Error(error)
     }
   }

@@ -13,11 +13,12 @@ const OrderService = require('../services/order.service').getInstance()
 module.exports = (router) => { 
   router.post('/create', async (req, res, next) => {
 		try {
-			const result = await OrderDetail.create(req.body)
+			const result = await OrderService.create(req.body)
+			console.log('this is result', result)
 			if (result.is_completed) {
-				return res.status(200).json({msg:result.message})
+				return res.status(200).json({msg:result.msg})
 			}
-			return res.status(400).json({msg:result.message})
+			return res.status(400).json({msg:result.msg})
 		}
 		catch (err) {
 			console.log(err.message)
