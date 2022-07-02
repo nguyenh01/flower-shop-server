@@ -28,7 +28,11 @@ let ShoppingCartDetailSchema = new schema ({
   total: {
     type: Number,
     required: false,
-  }
+  },
+  imageList: {
+    type: [String],
+    required: false
+},
 });
 
 module.exports = mongo.model('shoppingCartDetail', ShoppingCartDetailSchema);
