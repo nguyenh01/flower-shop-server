@@ -8,7 +8,7 @@ module.exports = (router) => {
     try{
         const user_id = req.payload.id;
         console.log('this is user', user_id)
-        const shoppingCart = await ShoppingCartService.getShoppingCartByCus(user_id);
+        const shoppingCart = await ShoppingCartService.getShoppingCartByCusId(user_id);
         console.log('shoppingCart', shoppingCart)
         const listShoppingCartDetail = await ShoppingCartService.getListShoppingCartDetailByShoppingCardId(shoppingCart?._id);
         if (shoppingCart && listShoppingCartDetail.length > 0)
@@ -53,7 +53,7 @@ module.exports = (router) => {
   router.post('/addProduct', async (req,res)=>{
     try {
         const {cus_id, product_id, quantity} = req.body
-        let shoppingCart = await ShoppingCartService.getShoppingCartByCus(cus_id);
+        let shoppingCart = await ShoppingCartService.getShoppingCartByCusId(cus_id);
         const result = await ShoppingCartService.updateShoppingCartDetail ({shoppingCart, product_id: product_id, quantity: quantity, cus_id})
 
         return res.json({code:200,message:"Thêm giỏ hàng thành công", result});
