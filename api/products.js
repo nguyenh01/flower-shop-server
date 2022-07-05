@@ -86,7 +86,7 @@ module.exports = (router) => {
 
   router.delete("/:id", async (req, res, next) => {
     try {
-      const id = req.params
+      const id = req.params.id
       const result = await ProductService.delete(id);
       if (result) {
         return res.status(200).json({msg: "Xóa thành công"});
