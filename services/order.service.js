@@ -82,9 +82,10 @@ module.exports = class OrderService extends BaseService {
       });
       if (id_customer_main) {
         console.log('this is id', id_customer_main)
+
+        const shoppingCartID = (await ShoppingCartService.getShoppingCartByCusId(id_customer_main))._id.toString()
+        console.log('this is shoppingCartID', shoppingCartID), 
         ShoppingCartService.deleteShoppingCartByUserId({cus_id: id_customer_main})
-        const shoppingCartID = (await ShoppingCartService.getShoppingCartByCusId({cus_id:id_customer_main}))._id.toString()
-        console.log(shoppingCartID)
         ShoppingCartService.deleteShoppingCartDetailBySCId({shoppingCart_id: shoppingCartID})
       }
 

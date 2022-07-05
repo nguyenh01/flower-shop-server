@@ -11,9 +11,7 @@ module.exports = class ShoppingCartService extends BaseService {
 
   async getShoppingCartByCusId (cus_id) {
     try {
-      console.log('helololo', cus_id)
       const result =  await ShoppingCart.findOne({cus_id:cus_id});
-      console.log('this is result', result)
       return result
     }
     catch(err) {
@@ -51,7 +49,9 @@ module.exports = class ShoppingCartService extends BaseService {
 
   async deleteShoppingCartDetailBySCId ({shoppingCart_id}) {
     try {
-        return await ShoppingCart.deleteMany({shoppingCart_id: shoppingCart_id})
+        const result =  await ShoppingCartDetail.deleteMany({shoppingCart_id: shoppingCart_id})
+        console.log('this í test', result, shoppingCart_id)
+        return result
     }
     catch(err) {
       console.log(err.message)
