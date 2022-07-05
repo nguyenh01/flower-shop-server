@@ -69,7 +69,7 @@ module.exports = (router) => {
     router.put('/updateProduct', authorize.verifyAccessToken, async (req,res)=>{
       try {
           let {carts} = req.body
-          carts = JSON.parse(carts)
+          // carts = JSON.parse(carts)
           console.log('this is carts', carts)
           const cus_id = req.payload.id
           await ShoppingCartService.updateProduct (cus_id, carts)
