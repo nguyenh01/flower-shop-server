@@ -9,10 +9,10 @@ module.exports = class ShoppingCartService extends BaseService {
     super()
   }
 
-  async getShoppingCartByCusId (cusInfo) {
+  async getShoppingCartByCusId (cus_id) {
     try {
-      console.log('helololo', typeof cusInfo.cus_id)
-      const result =  await ShoppingCart.findOne({cus_id:cusInfo.cus_id});
+      console.log('helololo', cus_id)
+      const result =  await ShoppingCart.findOne({cus_id:cus_id});
       console.log('this is result', result)
       return result
     }
