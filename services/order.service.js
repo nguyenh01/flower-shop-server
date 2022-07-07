@@ -116,4 +116,52 @@ module.exports = class OrderService extends BaseService {
     }
     return result;
   }
+  async getById(id) {
+    const orderInfo = await Order.findById(id)
+    const orderDetailInfo = await OrderDetail.find({order_id: id})
+    return {orderInfo, orderDetailInfo}
+  }
+
+  async list ({page, size, sort, direction, cus_id, status}) {
+    const pageParam = page ? page : 1
+    const sizeParam = size ? size : 9
+    let filters = {}
+    let sorts = {}
+
+
+    if (sort && direction) {
+      switch(direction) {
+        case 'desc':
+          sorts[sort] = -1;
+          break;
+        case 'asc':
+          sorts[sort] = 1;
+          break;
+        default:
+          sorts['name'] = 1;
+          break;
+      }
+    }
+
+    if (cus_id) {
+      filters['customer_id'] = cus_id;
+    }
+    if (status) {
+      filters['status'] = status
+    }
+
+    const skip = (pageParam - 1) * sizeParam
+    const total = await Order.find(filters).sort(sorts)
+    const result = await Order.find(filters).sort(sorts).skip(skip).limit(sizeParam);
+    let number_page = 0
+    if (total.length/sizeParam - total.length%sizeParam >= 0.5)
+    {
+        number_page = Math.ceil(parseInt((total.length / sizeParam - 0.5))) + 1
+    }
+    else
+    {
+        number_page = Math.ceil((total.length/sizeParam))
+    }
+    return {result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
+  }
 }

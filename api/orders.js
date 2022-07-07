@@ -26,6 +26,40 @@ module.exports = (router) => {
 			return res.status(500).json(err.message)
 		}
   })
+
+  router.get("/", authorize.verifyAccessToken, async (req, res, next) => {
+    try {
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+      const cus_id = req.payload?.id
+      const { status, sort, direction } = req.query;
+      const result = await OrderService.list({
+        page,
+        size,
+        sort,
+        direction,
+        cus_id,
+        status
+      });
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }),
+
+  router.get("/:id", async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const result = await OrderService.getById(id);
+      return res.status(200).json(result);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  })
 	// router.get('/', async (req, res, next) => {
 	// 	try {
   //     const page = parseInt(req.query.page);
