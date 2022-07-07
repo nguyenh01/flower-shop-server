@@ -5,6 +5,10 @@ const {mongo} = require('../connections/mongo')
 
 // Article Schema
 let OrderSchema = new schema({
+    order_code: {
+      type: String,
+      require:false
+    },
     note:{
       type: String,
       require:false

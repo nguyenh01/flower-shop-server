@@ -10,12 +10,15 @@ const Order = require('../models/order.model.js')
 const OrderDetail = require('../models/orderDetail.model.js')
 const OrderService = require('../services/order.service').getInstance()
 const authorize = require("../middlewares/authorize.js");
+const Token = process.env.SHOP_ADDRESS_TOKEN;
+const ShopId = process.env.SHOP_ID;
 
 module.exports = (router) => { 
   router.post('/create', authorize.verifyAccessToken, async (req, res, next) => {
 		try {
 			const user_id = req.payload?.id;
-			const result = await OrderService.create({...req.body, id_customer: user_id})
+			const result = await OrderService.create({...req.body, id_customer: user_id, token: Token, shopId: parseInt(ShopId)})
+      console.log('this is result', result)
 			if (result.is_completed) {
 				return res.status(200).json({msg:result.msg})
 			}
