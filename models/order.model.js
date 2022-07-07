@@ -76,6 +76,10 @@ let OrderSchema = new schema({
     completed_date: {
       type: String,
       require: true
+    },
+    full_address: {
+      type: String,
+      require: true
     }
 });
 
