@@ -25,12 +25,10 @@ module.exports = class ShoppingCartService extends BaseService {
         const is_delete_shoppingCartDetail = await ShoppingCartDetail.deleteOne({cus_id: cus_id})
         return is_delete_shoppingCartDetail
       } else {
-      //   const shopping_cart_id = (await ShoppingCart.findOne({cus_id: cus_id})).cus_id
-      //   console.log('hehehehehehehe', shopping_cart_id)
-      //   return 
-      //   const is_delete_shoppingCart = await ShoppingCart.findByIdAndDelete(shopping_cart_id)
-      //   const is_delete_shoppingCartDetail = await ShoppingCartDetail.deleteMany({shoppingCart_id: shopping_cart_id})
-      //   return {is_delete_shoppingCart, is_delete_shoppingCartDetail}
+        const shopping_cart_id = (await ShoppingCart.findOndeleteShoppingCartDetaile({cus_id: cus_id})).cus_id
+        const is_delete_shoppingCart = await ShoppingCart.findByIdAndDelete(shopping_cart_id)
+        const is_delete_shoppingCartDetail = await ShoppingCartDetail.deleteMany({shoppingCart_id: shopping_cart_id})
+        return {is_delete_shoppingCart, is_delete_shoppingCartDetail}
       }
     }
     catch(err) {
