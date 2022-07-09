@@ -16,7 +16,19 @@ let OrderDetailSchema = new schema({
   quantity:{
       type: Number,
       required: true
-  }
+  },
+  imageList: {
+    type: [String],
+    required: false
+},
+name: {
+  type: String,
+  required: false
+},
+price: {
+  type: Number,
+  required: false
+},
 });
 
 module.exports = mongo.model('orderDetail', OrderDetailSchema);

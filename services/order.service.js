@@ -114,6 +114,9 @@ module.exports = class OrderService extends BaseService {
               order_id: order_id,
               product_id: product.id,
               quantity:product.quantity,
+              name: product.name,
+              price: product.price,
+              imageList: product.imageList
             })
           });
           if (id_customer_main) {
