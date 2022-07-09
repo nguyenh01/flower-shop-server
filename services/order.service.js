@@ -41,6 +41,7 @@ module.exports = class OrderService extends BaseService {
             return {is_completed: false, msg:"Không đủ số lượng sản phẩm"}
           }
           const productInfo = await ProductService.getById(products[i].id)
+          productInfo['quantity'] = products[i].quantity
           product_list_info.push(productInfo)
           total_fee += productInfo?.price * products[i].quantity
         }
@@ -109,7 +110,7 @@ module.exports = class OrderService extends BaseService {
 
           const order_id = orderInfo._id.toString()
           //Begin==Create OrderDetail//
-          products.forEach(async product => {
+          product_list_info.forEach(async product => {
             await OrderDetail.create({
               order_id: order_id,
               product_id: product.id,
