@@ -220,9 +220,14 @@ module.exports = class OrderService extends BaseService {
 
   }
   async update({id, status}) {
-    console.log('this is', id, status)
+    const orderInfo = await Order.findById(id)
+    if (orderInfo.status != 0 && status == 3) {
+      return {is_completed: false, msg:'Bạn không có quyền hủy đơn hàng này'}
+    }
     const result = await Order.updateOne({_id: id}, {status})
-    console.log(result)
-    return result
+    if (result) {
+      return {is_completed: true, msg: "Cập nhật thành công"}
+    }
+    return {is_completed: false, msg:'Cập nhật thất bại'}
   }
 }

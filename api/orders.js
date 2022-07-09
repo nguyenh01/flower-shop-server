@@ -80,10 +80,15 @@ module.exports = (router) => {
                           }
                       })
                   })
-                  return res.status(200).json({code: 1, message: "Update status success", data: result})
+
+              }
+              if (result.is_completed) {
+                return res.status(200).json({msg:result.msg})
+              } else {
+                return res.status(400).json({msg:result.msg})
               }
           }
-      else return res.status(200).json({code: 0, message: "Update fail"})
+      else return res.status(400).json({code: 0, message: "Update fail"})
     }
     catch (error) {
       console.log(error);
