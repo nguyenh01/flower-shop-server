@@ -18,7 +18,6 @@ module.exports = (router) => {
 		try {
 			const user_id = req.payload?.id;
 			const result = await OrderService.create({...req.body, id_customer: user_id, token: Token, shopId: parseInt(ShopId)})
-      console.log('this is result', result)
 			if (result.is_completed) {
 				return res.status(200).json({msg:result.msg})
 			}
