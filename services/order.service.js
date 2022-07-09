@@ -2,11 +2,13 @@
 
 const fetch = require("node-fetch");
 const moment = require('moment')
+const nodemailer = require('nodemailer');
 const createError = require('http-errors');
 const BaseService = require('./base.service')
 const ShipFeeService = require('./shipFee.service').getInstance()
 const ProductService = require('./product.service').getInstance()
 const ShoppingCartService = require('./shoppingCart.service').getInstance()
+const SendMailService = require('./sendMail.service').getInstance()
 const Product = require('../models/product.model.js')
 const Order = require('../models/order.model.js')
 const OrderDetail = require('../models/orderDetail.model.js')
@@ -15,7 +17,6 @@ module.exports = class OrderService extends BaseService {
   constructor(){
     super()
   }
-
   async create(OrderInfo) {
     try {
       console.log('hello')
@@ -127,7 +128,13 @@ module.exports = class OrderService extends BaseService {
               ShoppingCartService.deleteShoppingCartDetailBySCId({shoppingCart_id: shoppingCartID})
             }
           }
-          
+          /////===Begin====Gửi email thông báo thành công=======///////
+          const text = 'Bạn vừa đặt mua sản phẩm tại cửa hàng Flower \nMã đơn hàng:' + json.data.order_code + 
+          '\nPhí vận chuyển:' + shipFee + "\nTổng tiền" + total_fee 
+          const to = email
+
+          await SendMailService.send({to, text})
+          /////===End====Gửi email thông báo thành công=======///////
           
           //End == Create order //
         } else {

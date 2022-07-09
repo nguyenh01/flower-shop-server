@@ -4,6 +4,8 @@ const moment = require('moment')
 const createError = require('http-errors');
 const BaseService = require('./base.service')
 const Product = require('../models/product.model.js')
+const Material = require('../models/material.model.js')
+const Category = require('../models/category.model.js')
 const ShoppingCartDetail = require('../models/shoppingCartDetail.model.js');
 
 module.exports = class ProductService extends BaseService {
@@ -90,7 +92,7 @@ module.exports = class ProductService extends BaseService {
 
     const skip = (pageParam - 1) * sizeParam
     const total = await Product.find(filters).sort(sorts)
-    const result = await Product.find(filters).sort(sorts).skip(skip).limit(sizeParam);
+    const productInfos = await Product.find(filters).sort(sorts).skip(skip).limit(sizeParam);
     let number_page = 0
     if (total.length/sizeParam - total.length%sizeParam >= 0.5)
     {
@@ -100,7 +102,17 @@ module.exports = class ProductService extends BaseService {
     {
         number_page = Math.ceil((total.length/sizeParam))
     }
-    return {result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
+    const materialsInfo = await Material.find()
+    const categoriesInfo = await Category.find()
+    const result = productInfos.reduce((productList, product) => {
+      const productUpdate = {...product._doc}
+      productUpdate['material_name'] = materialsInfo.find((item) => item._id.toString() == product.mate_id).name
+      productUpdate['caterial_name'] = categoriesInfo.find((item) => item._id.toString() == product.cate_id).name
+      // console.log(productUpdate)
+      return productUpdate
+    }, {})
+    console.log(result)
+    return {result: result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
   }
 
   async getById(id) {
