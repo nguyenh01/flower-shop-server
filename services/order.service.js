@@ -94,8 +94,8 @@ module.exports = class OrderService extends BaseService {
             address: address,
             email: email,
             employee_id: "",
-            order_date: moment().format('DD/MM/YYYY'),
-            ship_date: moment(json.data.expected_delivery_time).format('DD/MM/YYYY'),
+            order_date: moment().format('DD/MM/YYYY hh:mm'),
+            ship_date: moment(json.data.expected_delivery_time).format('DD/MM/YYYY hh:mm'),
             ship_fee: shipFee,
             product_fee: total_fee - shipFee,
             total_fee: total_fee,
@@ -162,7 +162,6 @@ module.exports = class OrderService extends BaseService {
     const orderDetailInfo = await OrderDetail.find({order_id: id})
     return {orderInfo, orderDetailInfo}
   }
-
   async list ({page, size, sort, direction, cus_id, status, order_code, is_paging = true}) {
     const pageParam = page ? page : 1
     const sizeParam = size ? size : 9
@@ -215,5 +214,11 @@ module.exports = class OrderService extends BaseService {
       return result;
     }
 
+  }
+  async update({id, status}) {
+    console.log('this is', id, status)
+    const result = await Order.updateOne({_id: id}, {status})
+    console.log(result)
+    return result
   }
 }

@@ -64,7 +64,35 @@ module.exports = (router) => {
       console.log(error);
       next(error);
     }
+  }),
+
+  router.put("/", async (req, res, next) => {
+    try{
+      const {id, status} = req.body
+      const result = await OrderService.update({id, status})
+      if (result) {
+              if(status === 1) {
+                  const listProductOrdered = await OrderDetail.find({order_id: id})
+                  listProductOrdered.map((value, index) => {
+                      Product.findById(value.product_id, async (err, doc) => {
+                          if (doc) {
+                              let newUnit = doc.unitsinstock - value.quantity
+                              await Product.updateOne({_id: value.product_id}, {unitsinstock: newUnit})
+                          }
+                      })
+                  })
+                  return res.status(200).json({code: 1, message: "Update status success", data: result})
+              }
+          }
+      else return res.status(200).json({code: 0, message: "Update fail"})
+    }
+    catch (error) {
+      console.log(error);
+      next(error)
+    }
   })
+
+
 	// router.get('/', async (req, res, next) => {
 	// 	try {
   //     const page = parseInt(req.query.page);
