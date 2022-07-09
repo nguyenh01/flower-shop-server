@@ -96,7 +96,7 @@ module.exports = class OrderService extends BaseService {
             email: email,
             employee_id: "",
             order_date: moment().utcOffset(420).format('DD/MM/YYYY HH:mm'),
-            ship_date: moment(json.data.expected_delivery_time).utcOffset(420).format('DD/MM/YYYY HH:mm'),
+            ship_date: moment(json.data.expected_delivery_time).utcOffset(420).format('DD/MM/YYYY'),
             ship_fee: shipFee,
             product_fee: total_fee - shipFee,
             total_fee: total_fee,
