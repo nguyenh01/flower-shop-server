@@ -35,14 +35,16 @@ module.exports = (router) => {
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
       const cus_id = req.payload?.id
-      const { status, sort, direction } = req.query;
+      const { status, sort, direction, order_code, is_paging } = req.query;
       const result = await OrderService.list({
         page,
         size,
         sort,
         direction,
         cus_id,
-        status
+        status,
+        order_code,
+        is_paging,
       });
       return res.status(200).json({
         data: result,

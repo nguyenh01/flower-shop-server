@@ -163,11 +163,12 @@ module.exports = class OrderService extends BaseService {
     return {orderInfo, orderDetailInfo}
   }
 
-  async list ({page, size, sort, direction, cus_id, status}) {
+  async list ({page, size, sort, direction, cus_id, status, order_code, is_paging = true}) {
     const pageParam = page ? page : 1
     const sizeParam = size ? size : 9
     let filters = {}
     let sorts = {}
+    const is_pagingParam = JSON.parse(is_paging)
 
 
     if (sort && direction) {
@@ -190,19 +191,29 @@ module.exports = class OrderService extends BaseService {
     if (status) {
       filters['status'] = status
     }
+    if (order_code) {
+      filters['order_code'] = order_code
+    }
 
     const skip = (pageParam - 1) * sizeParam
     const total = await Order.find(filters).sort(sorts)
-    const result = await Order.find(filters).sort(sorts).skip(skip).limit(sizeParam);
-    let number_page = 0
-    if (total.length/sizeParam - total.length%sizeParam >= 0.5)
-    {
-        number_page = Math.ceil(parseInt((total.length / sizeParam - 0.5))) + 1
+    let result;
+    if (is_pagingParam) {
+      result = await Order.find(filters).sort(sorts).skip(skip).limit(sizeParam);
+      let number_page = 0
+      if (total.length/sizeParam - total.length%sizeParam >= 0.5)
+      {
+          number_page = Math.ceil(parseInt((total.length / sizeParam - 0.5))) + 1
+      }
+      else
+      {
+          number_page = Math.ceil((total.length/sizeParam))
+      }
+      return {result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
+    } else {
+      result = total;
+      return result;
     }
-    else
-    {
-        number_page = Math.ceil((total.length/sizeParam))
-    }
-    return {result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
+
   }
 }
