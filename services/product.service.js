@@ -104,13 +104,12 @@ module.exports = class ProductService extends BaseService {
     }
     const materialsInfo = await Material.find()
     const categoriesInfo = await Category.find()
-    const result = productInfos.reduce((productList, product) => {
+    const result = productInfos.map((product) => {
       const productUpdate = {...product._doc}
       productUpdate['material_name'] = materialsInfo.find((item) => item._id.toString() == product.mate_id).name
       productUpdate['caterial_name'] = categoriesInfo.find((item) => item._id.toString() == product.cate_id).name
-      // console.log(productUpdate)
       return productUpdate
-    }, {})
+    })
     console.log(result)
     return {result: result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
   }
