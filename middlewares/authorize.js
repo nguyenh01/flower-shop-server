@@ -56,6 +56,7 @@ module.exports = {
     verifyAccessToken (req, res, next) {
         console.log('first')
         if (!req.headers['authorization']) {
+            console.log('seccond')
             next()
         }
         const token = req.headers['authorization']?.split(' ')[1]
