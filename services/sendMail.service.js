@@ -28,7 +28,7 @@ module.exports = class CategoryService extends BaseService {
                 clientId: CLIENT_ID,
                 clientSecret: CLIENT_SECRET,
                 refreshToken: REFRESH_TOKEN,
-                // accessToken: accessToken
+                accessToken: accessToken
             }
         })
 
