@@ -59,6 +59,7 @@ module.exports = {
             console.log('seccond')
             next()
         }
+        console.log('thirt')
         const token = req.headers['authorization']?.split(' ')[1]
         console.log('token2', token)
         if (!token) {
