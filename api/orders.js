@@ -33,7 +33,8 @@ module.exports = (router) => {
     try {
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
-      const cus_id = req.payload?.id
+      const type = req.payload?.type
+      const cus_id = (type != 3) ? req.payload?.id : ''
       const { status, sort, direction, order_code, is_paging } = req.query;
       const result = await OrderService.list({
         page,
