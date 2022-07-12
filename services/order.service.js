@@ -202,7 +202,7 @@ module.exports = class OrderService extends BaseService {
       filters['status'] = status
     }
     if (order_code) {
-      filters['order_code'] = order_code
+      filters['order_code'] = {$regex : new RegExp(order_code, "i")}
     }
 
     const skip = (pageParam - 1) * sizeParam
