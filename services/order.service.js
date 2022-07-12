@@ -29,7 +29,6 @@ module.exports = class OrderService extends BaseService {
       let is_not_enough;
       let total_fee = shipFee;
       let id_customer_main = id_customer;
-      let product_list_info = []
       if(item!=null)
       {
         products = item
@@ -42,8 +41,10 @@ module.exports = class OrderService extends BaseService {
             return {is_completed: false, msg:"Không đủ số lượng sản phẩm"}
           }
           const productInfo = await ProductService.getById(products[i].id)
+          products[i]['name'] = productInfo.name
+          products[i]['weight'] = 200
+          products[i]['price'] = productInfo.price
           productInfo['quantity'] = products[i].quantity
-          product_list_info.push(productInfo)
           total_fee += productInfo?.price * products[i].quantity
         }
       }
@@ -111,7 +112,7 @@ module.exports = class OrderService extends BaseService {
 
           const order_id = orderInfo._id.toString()
           //Begin==Create OrderDetail//
-          product_list_info.forEach(async product => {
+          products.forEach(async product => {
             await OrderDetail.create({
               order_id: order_id,
               product_id: product.id,
@@ -129,8 +130,8 @@ module.exports = class OrderService extends BaseService {
             }
           }
           /////===Begin====Gửi email thông báo thành công=======///////
-          const text = 'Bạn vừa đặt mua sản phẩm tại cửa hàng Flower \nMã đơn hàng:' + json.data.order_code + 
-          '\nPhí vận chuyển:' + shipFee + "\nTổng tiền" + total_fee 
+          const text = 'Bạn vừa đặt mua sản phẩm tại cửa hàng Flower Sun \nMã đơn hàng: ' + json.data.order_code + 
+          '\nPhí vận chuyển: ' + formatAmount(parseInt(shipFee)) + "\nTổng tiền: " + formatAmount(parseInt(total_fee ))
           const to = email
 
           await SendMailService.send({to, text})
@@ -149,6 +150,7 @@ module.exports = class OrderService extends BaseService {
       throw Error(error)
     }
   }
+
   async get({option = 'day'}) {
     const currentDate = moment();
     const total_order = Order.find({status:2})
@@ -237,4 +239,8 @@ module.exports = class OrderService extends BaseService {
     }
     return {is_completed: false, msg:'Cập nhật thất bại'}
   }
-}
+};
+const formatAmount = (amount) => {
+  const handleAmount = amount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  return handleAmount;
+};

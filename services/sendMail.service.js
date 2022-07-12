@@ -1,7 +1,7 @@
 const {google} = require('googleapis')
 const nodemailer = require("nodemailer");
 const BaseService = require('./base.service')
-require('dotenv').config()
+// require('dotenv').config()
 
 const CLIENT_ID = process.env.CLIENT_ID 
 const CLIENT_SECRET = process.env.CLIENT_SECRET 
@@ -33,7 +33,7 @@ module.exports = class CategoryService extends BaseService {
 
         // send mail with defined transport object
         let info = await transporter.sendMail({
-            from: '"Fred Foo 👻" <notifyflowershop@gmail.com>', // sender address
+            from: '"Flower Sun" <notifyflowershop@gmail.com>', // sender address
             to: to, // list of receivers
             subject: "Thông báo đặt hàng thành công", // Subject line
             text: text, // plain text body
