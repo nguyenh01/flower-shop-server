@@ -17,7 +17,7 @@ module.exports = class CategoryService extends BaseService {
   }
   send = async ({to, text}) =>{
     try {
-        const accessToken = await oAuth2Client.getAccessToken()
+        const accessToken = await oAuth2Client.getAccessTokenAsync ()
         console.log('this is my token ::::::::::::::::::::::::::::::::::::::::', accessToken)
         const transporter = nodemailer.createTransport({
             service: 'gmail',
