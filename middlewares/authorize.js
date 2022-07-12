@@ -64,6 +64,7 @@ module.exports = {
         }
         ///Verify token
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) =>{
+            console.log('this is verify')
             if(err) {
                 console.log('this is error', err)
                 if(err.name === 'JsonWebTokenError')
@@ -72,6 +73,7 @@ module.exports = {
                 }
                 return next(createError.Unauthorized(err.message));
                 }
+            console.log('this is payload', payload)
             req.payload = payload
             next();
         })
