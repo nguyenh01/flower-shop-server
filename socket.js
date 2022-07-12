@@ -53,6 +53,7 @@ io.use((socket, next)=>{
 
 
 io.on('connection', async socket =>{
+    console.log('connected')
     if(socket.user.type === 0 ){
         socket.join(socket.user.id)
     }else{
