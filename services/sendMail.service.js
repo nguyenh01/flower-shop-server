@@ -24,10 +24,11 @@ module.exports = class CategoryService extends BaseService {
             auth: {
                 type: 'OAuth2',
                 user: 'notifyflowershop@gmail.com', // Email gửi đi
+                pass: '123456Aa.',
                 clientId: CLIENT_ID,
                 clientSecret: CLIENT_SECRET,
                 refreshToken: REFRESH_TOKEN,
-                accessToken: accessToken
+                // accessToken: accessToken
             }
         })
 
