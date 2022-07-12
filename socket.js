@@ -37,12 +37,12 @@ const messageDisplay = (message)=>{
 //Middleware
 io.use((socket, next)=>{
     const token = socket.handshake.auth.token
-    console.log('this is token', token)
     if(!token){
         return next(new Error('Require token'))
     }
 
     const payload = authorize.verifyAccessToken(token)
+    console.log('this is payload', payload)
     if(!payload){
         return next(new Error('Token invalid'))
     }
