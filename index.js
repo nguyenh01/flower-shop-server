@@ -29,6 +29,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => {
+const httpServer = app.listen(PORT, () => {
   console.log("Server is running at port " + PORT);
 });
+
+// Require socket
+const {attachServer} = require('./socket.js')
+attachServer(httpServer)
