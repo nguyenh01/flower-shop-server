@@ -54,6 +54,7 @@ module.exports = {
     },
     
     verifyAccessToken (req, res, next) {
+        console.log('first')
         if (!req.headers['authorization']) {
             next()
         }
