@@ -36,6 +36,7 @@ const messageDisplay = (message)=>{
 
 //Middleware
 io.use((socket, next)=>{
+    console.log('Connected')
     const token = socket.handshake.auth.token
 
     if(!token){
@@ -53,7 +54,6 @@ io.use((socket, next)=>{
 
 
 io.on('connection', async socket =>{
-    console.log('connected')
     if(socket.user.type === 0 ){
         socket.join(socket.user.id)
     }else{
