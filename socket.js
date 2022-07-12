@@ -37,7 +37,7 @@ const messageDisplay = (message)=>{
 //Middleware
 io.use((socket, next)=>{
     const token = socket.handshake.auth.token
-    console.log(token)
+    console.log('this is token', token)
     if(!token){
         return next(new Error('Require token'))
     }
