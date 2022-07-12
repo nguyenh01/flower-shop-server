@@ -44,6 +44,7 @@ io.use((socket, next)=>{
     const payload = authorize.verifyAccessToken(token)
     console.log('this is payload', payload)
     if(!payload){
+        console.log('payload fail')
         return next(new Error('Token invalid'))
     }
     socket.user = payload
