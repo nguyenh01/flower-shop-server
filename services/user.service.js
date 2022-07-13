@@ -64,8 +64,9 @@ module.exports = class UserService extends BaseService {
   }
 
   async update(id, userInfo) {
-    const { phone, last_name, first_name } = userInfo;
-    return await User.updateOne({ _id: id }, {phone, last_name, first_name});
+    const { phone, lastName, firstName } = userInfo;
+    return await User.updateOne({ _id: id }, {phone, lastName, firstName});
+
   }
 
   async updatePassword({id, oldPassword, newPassword}) {
