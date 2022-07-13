@@ -63,6 +63,21 @@ module.exports = class UserService extends BaseService {
     return user;
   }
 
+  async update(id, userInfo) {
+    const { phone, name } = userInfo;
+    return await User.updateOne({ _id: id }, {phone, name});
+  }
+
+  async updatePassword({id, oldPassword, newPassword}) {
+    const salt = await bcrypt.genSalt(10); // Add string to password
+    const hashedPassword = await bcrypt.hash(newPassword,salt);
+    const user = await User.findById(id);
+    const passwordIsValid = await user.isCheckPassword(oldPassword);
+    if (!passwordIsValid) return {is_completed: false, msg: "Mật khẩu cũ không chính xác!!!"}
+    await User.updateOne({ id }, {password: hashedPassword});
+    return {is_completed: true, msg: "Thay đổi mật khẩu thành công"}
+  }
+
   // async login (userInfo) {
   //   const {userName, password} = userInfo;
   //   const userNameExist = await User.findOne({userName: userName})
