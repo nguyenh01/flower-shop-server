@@ -14,7 +14,7 @@ export const ROLES = [
     name: 'EMPLOYEE'
   },
   {
-    level: 2,
+    level: 3,
     name: 'ADMIN'
   }
 ]

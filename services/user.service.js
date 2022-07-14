@@ -4,6 +4,7 @@ const createError = require("http-errors");
 const bcrypt = require("bcrypt");
 const BaseService = require("./base.service");
 const User = require("../models/user.model.js");
+const _ = require("lodash")
 
 module.exports = class UserService extends BaseService {
   constructor() {
@@ -19,13 +20,59 @@ module.exports = class UserService extends BaseService {
     }
   }
 
+  async list({sort, direction, type, is_paging = true, page, size}) {
+    try {
+      const pageParam = page ? parseInt(page) : 1
+      const sizeParam = size ? parseInt(size) : 9
+      const is_pagingParam = JSON.parse(is_paging)
+      let sorts = {}
+      let filters = {}
+      if (sort && direction) {
+        switch(direction) {
+          case 'desc':
+            sorts[sort] = -1;
+            break;
+          case 'asc':
+            sorts[sort] = 1;
+            break;
+          default:
+            sorts['name'] = 1;
+            break;
+        }
+      }
+
+      type && (filters['type'] = type)
+      const total = await User.find(filters).sort(sorts)
+      let result
+      if (is_pagingParam) {
+        const skip = (pageParam - 1) * sizeParam
+        result = await User.find(filters).sort(sorts).skip(skip).limit(sizeParam);
+        let number_page = 0
+        if (total.length/size - total.length%sizeParam >= 0.5)
+        {
+            number_page = Math.ceil(parseInt((total.length / sizeParam - 0.5))) + 1
+        }
+        else
+        {
+            number_page = Math.ceil((total.length/sizeParam))
+        }
+        return {result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
+      } else {
+        result = total
+        return result
+      }
+    } catch (err) {
+      console.log(err)
+      return "There was a problem finding the user.";
+    }
+  }
+
   async signup(userInfo) {
     const {
       email,
       password,
       firstName,
       lastName,
-      type,
       phone,
       address,
       birthdate,
@@ -49,6 +96,24 @@ module.exports = class UserService extends BaseService {
       phone: phone,
       address: address,
       birthdate: birthdate,
+    });
+
+    return userCreated;
+  }
+
+  async create(userInfo) {
+    const {
+      email,
+    } = userInfo;
+    const emailExist = email && (await User.findOne({ email: email }));
+    if (emailExist) {
+      throw createError.Conflict(`${email} is ready been registered`);
+    }
+
+    const userCreated = await User.create({
+      email: email,
+      password: '12345678',
+      type: 1,
     });
 
     return userCreated;

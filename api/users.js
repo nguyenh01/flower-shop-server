@@ -123,6 +123,25 @@ module.exports = (router) => {
     res.status(200).json({ auth: false, token: null });
   });
 
+  router.get("/", authorize.verifyAccessToken, async (req, res, next) => {
+    try {
+      console.log(req.payload)
+      const type = req.payload.type;
+      if (type != 3) {
+        return res.status(400).json({msg: "Bạn không có quyền xem danh sách tài khoản"})
+      }
+      const user = await UserService.list(req.query);
+      if (!user) return res.status(404).json("No user found.");
+      return res.status(200).json({ user: user });
+    } catch (error) {
+      console.log(error);
+      return res.status(404).json({
+        message: "Fail",
+        error: error.message,
+      });
+    }
+  });
+
   router.get("/me", authorize.verifyAccessToken, async (req, res, next) => {
     try {
       const _id = req.payload.id;
@@ -162,6 +181,26 @@ module.exports = (router) => {
       const result = await UserService.updatePassword({id:_id, oldPassword, newPassword});
       if (!result.is_completed) return res.status(400).json({msg: result.msg});
       return res.status(200).json({msg: result.msg});
+    } catch (error) {
+      console.log(error);
+      return res.status(404).json({
+        message: "Fail",
+        error: error.message,
+      });
+    }
+  });
+
+  router.post("/create", authorize.verifyAccessToken, async (req, res, next) => {
+    try {
+      console.log(req.payload)
+      const type = req.payload.type;
+      if (type != 3) {
+        return res.status(400).json({msg: "Bạn không có quyền để tạo tài khoản"})
+      }
+      const {email} = req.body
+      const result = await UserService.create({email});
+      if (!result) return res.status(400).json({msg: "Tạo tài khoản thất bai (Server error) !!!"});
+      return res.status(200).json({msg: "Tạo tài khoản thành công"});
     } catch (error) {
       console.log(error);
       return res.status(404).json({
