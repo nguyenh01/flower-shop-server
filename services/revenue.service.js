@@ -7,7 +7,7 @@ const BaseService = require('./base.service')
 const Category = require('../models/category.model.js')
 const OrderService = require('./order.service').getInstance();
 
-module.exports = class StatisticalService extends BaseService {
+module.exports = class RevenueService extends BaseService {
   constructor(){
     super()
   }

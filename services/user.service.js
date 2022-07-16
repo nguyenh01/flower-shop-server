@@ -113,7 +113,7 @@ module.exports = class UserService extends BaseService {
     const userCreated = await User.create({
       email: email,
       password: '12345678',
-      type: 1,
+      type: 2,
     });
 
     return userCreated;
