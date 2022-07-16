@@ -7,7 +7,7 @@ module.exports = (router) => {
         (req, res) => {
             const type = req.payload.type
             console.log(type)
-            if (type != 2) {
+            if (type != 3) {
                 return res.status(400).json("Không có quyền truy cập")
             }
             const {option} = req.params

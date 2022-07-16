@@ -151,10 +151,14 @@ module.exports = class OrderService extends BaseService {
     }
   }
 
-  async get({option = 'day'}) {
+  async getTotal(option = 'day') {
+    console.log('hello2')
     const currentDate = moment();
-    const total_order = Order.find({status:2})
+    const total_order = await Order.find({status:2})
     let result;
+    total_order.map((item) => {
+      console.log(item.completed_date)
+    })
     switch(option) {
       case 'day':
         result = total_order.filter((element) => {currentDate.isSame(moment(element.completed_date))})
@@ -168,6 +172,8 @@ module.exports = class OrderService extends BaseService {
       default:
         break;
     }
+
+    console.log('this is result', result)
     return result;
   }
   async getById(id) {
@@ -233,7 +239,11 @@ module.exports = class OrderService extends BaseService {
     if (orderInfo.status != 0 && status == 3) {
       return {is_completed: false, msg:'Bạn không có quyền hủy đơn hàng này'}
     }
-    const result = await Order.updateOne({_id: id}, {status})
+    let receive_date;
+    if (status == 3) {
+      receive_date = moment().utcOffset(420).format('DD/MM/YYYY')
+    }
+    const result = await Order.updateOne({_id: id}, {status}, {receive_date})
     if (result) {
       return {is_completed: true, msg: "Cập nhật thành công"}
     }

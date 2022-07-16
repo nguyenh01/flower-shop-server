@@ -129,7 +129,7 @@ module.exports = class UserService extends BaseService {
   }
 
   async update(id, userInfo) {
-    const { phone, lastName, firstName } = userInfo;
+    const { phone, lastName, firstName, address, birthdate} = userInfo;
     return await User.updateOne({ _id: id }, {phone, lastName, firstName});
 
   }

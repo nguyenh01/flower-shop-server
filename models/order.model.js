@@ -49,6 +49,10 @@ let OrderSchema = new schema({
       type: String,
       required: false
     },
+    receive_date: {
+      type: String,
+      required: false
+    },
     status: {
       type: Number,
       required: true
