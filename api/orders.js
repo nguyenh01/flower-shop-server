@@ -17,6 +17,7 @@ module.exports = (router) => {
   router.post('/create', authorize.verifyAccessToken, async (req, res, next) => {
 		try {
 			const user_id = req.payload?.id;
+      console.log("token vs shopId", Token, ShopId)
 			const result = await OrderService.create({...req.body, id_customer: user_id, token: Token, shopId: parseInt(ShopId)})
 			if (result.is_completed) {
 				return res.status(200).json({msg:result.msg})
