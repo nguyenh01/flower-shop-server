@@ -77,6 +77,7 @@ module.exports = class OrderService extends BaseService {
             "height": 10,
             "service_id": 0,
             "service_type_id":2,
+            "payment_type_id":2,
             "items": products
         }),
             
