@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const validator = require("../middlewares/validator");
 const UserService = require("../services/user.service").getInstance();
 const authorize = require("../middlewares/authorize.js");
-
 const { secret } = require("../config.json");
 
 module.exports = (router) => {
@@ -93,19 +92,22 @@ module.exports = (router) => {
         const userId = result._id;
         const user = await UserService.get(userId);
 
-        var token = jwt.sign(
-          { id: result._id, type: user.type },
-          process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: 86400, // expires in 24 hours
-          }
-        );
+        // var token = jwt.sign(
+        //   { id: result._id, type: user.type },
+        //   process.env.ACCESS_TOKEN_SECRET,
+        //   {
+        //     expiresIn: 86400, // expires in 24 hours
+        //   }
+        // );
+        const token = await authorize.signAccessToken(user._id)
+        const refreshToken = await authorize.signRefreshToken(user._id)
 
         res.cookie("jwt", token, { maxAge: 86400 });
 
         return res.status(200).json({
           message: "Successful",
           token: token,
+          refreshToken,
           type: user.type,
         });
       } catch (error) {
@@ -208,5 +210,24 @@ module.exports = (router) => {
         error: error.message,
       });
     }
+  });
+
+  router.get("/refresh-token", async (req, res, next) => {
+    try{
+      const {refreshToken} = req.body
+      if(!refreshToken){
+          throw createError.BadRequest();
+          
+      }
+      
+      const {userId} = await authorize.verifyRefreshToken(refreshToken);
+      const accessToken = await authorize.signAccessToken(userId);
+      const newRefreshToken = await authorize.signRefreshToken(userId);
+      res.json({accessToken, refreshToken:newRefreshToken});
+  }
+  catch(error)
+  {
+      next(error);
+  }
   });
 }

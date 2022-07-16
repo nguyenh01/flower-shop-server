@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const createError = require('http-errors');
 const { secret } = require('../config.json');
+const moment = require('moment')
+const RefreshToken = require('../models/refreshToken.model.js')
 // const db = require('_helpers/db');
 
 module.exports = {
@@ -82,37 +84,51 @@ module.exports = {
         })
     },
     
-    async signRefreshToken (id) {
+    async signRefreshToken (userId) {
         return new Promise((resolve, reject) => {
             const payload = {
-                id
+                userId
             }
             const secret = process.env.REFRESH_TOKEN_SECRET;
             const options = {
                 expiresIn: "1y"
             }
     
-            jwt.sign(payload, secret, options, (error, token) => {
-                if (error) {
+            jwt.sign(payload, secret, options, async (error, token) => {
+                try{
+                    let refresh_token =  new RefreshToken({
+                        id: userId.toString(),
+                        token,
+                        expire: moment().add(365, 'days')
+                    })
+                    let delete_old_refresh_token = await RefreshToken.deleteMany({id: userId.toString()})
+                    let save_refresh_token = await refresh_token.save()
+                    resolve(token);
+                }
+                catch(error){
                     reject(error);
                 }
-                resolve(token);
             })
         })
     },
     
     async verifyRefreshToken (refreshToken) {
         return new Promise((resolve, reject) => {
-            JWT.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, payload)=>{
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, payload)=>{
                 try{
                     if(err) reject(err); //Catch invalid token
-                    let rfToken = await client.get(payload.userId)
-                    if (rfToken === refreshToken) {
+                    let rfToken = await RefreshToken.findOne({id: payload.userId})
+                    if (moment(rfToken.expire).isBefore(moment())) {
+                        return reject({msg: "Refresh token expired"})
+                    }
+                    // console.log(":::::::::::::", rfToken, refreshToken)
+                    if (rfToken.token === refreshToken) {
                         return resolve(payload)
                     }
                     return reject(createError.Unauthorized()); //Check token isexist in redis db
                 }
                 catch(err){
+                    console.log(err.message)
                     reject(createError.InternalServerError());
                 }
             })
