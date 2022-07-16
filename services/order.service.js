@@ -250,7 +250,7 @@ module.exports = class OrderService extends BaseService {
     if (status == 2) {
       receive_date = moment().utcOffset(420).format('DD/MM/YYYY')
     }
-    const result = await Order.updateOne({_id: id}, {status}, {receive_date})
+    const result = await Order.updateOne({_id: id}, {status, receive_date})
     if (result) {
       return {is_completed: true, msg: "Cập nhật thành công"}
     }
