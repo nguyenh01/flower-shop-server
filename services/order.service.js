@@ -147,6 +147,9 @@ module.exports = class OrderService extends BaseService {
           throw new Error({is_completed: false, msg: "Giao dịch thất bại"})
         }
       })
+      .catch(err => {
+        console.log('this is err', err)
+      })
       return {is_completed: true, msg: "Giao dịch thành công"}
     }
     catch (err) {
