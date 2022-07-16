@@ -32,7 +32,6 @@ module.exports = (router) => {
     async (req, res, next) => {
       try {
         const result = await ImportHistoryService.create(req.body)
-        console.log('this is result', result)
         return res.status(200).json({ 
           data: result
         })

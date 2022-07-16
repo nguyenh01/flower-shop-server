@@ -107,11 +107,36 @@ module.exports = class ProductService extends BaseService {
     const result = productInfos.map((product) => {
       const productUpdate = {...product._doc}
       productUpdate['material_name'] = materialsInfo.find((item) => item._id.toString() == product.mate_id).name
-      productUpdate['caterial_name'] = categoriesInfo.find((item) => item._id.toString() == product.cate_id).name
+      productUpdate['category_name'] = categoriesInfo.find((item) => item._id.toString() == product.cate_id).name
       return productUpdate
     })
     console.log(result)
     return {result: result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
+  }
+
+  async list({is_paging = true, page, size}) {
+    const pageParam = parseInt(page)
+    const sizeParam = parseInt(size)
+    const is_pagingParam = JSON.parse(is_paging)
+    const total = await Product.find().sort()
+    let result;
+    if (is_pagingParam) {
+      const skip = (pageParam - 1) * sizeParam
+      result = await Product.find().sort().skip(skip).limit(sizeParam);
+      let number_page = 0
+      if (total.length/size - total.length%size >= 0.5)
+      {
+          number_page = Math.ceil(parseInt((total.length / sizeParam - 0.5))) + 1
+      }
+      else
+      {
+          number_page = Math.ceil((total.length/sizeParam))
+      }
+      return {result, page_size: sizeParam, total_element: total.length, total_page: number_page, page: pageParam}
+    } else {
+      result = total
+      return result
+    }
   }
 
   async getById(id) {
@@ -122,7 +147,6 @@ module.exports = class ProductService extends BaseService {
   async updateProduct(productInfo, files) {
     const {id, cate_id, mate_id, name, price, unitsinstock, description} = productInfo
     let imageList = []
-    console.log('this is', files)
     if (!files) {
       const error = new Error('Please choose file');
       error.httpStatusCode = 400;

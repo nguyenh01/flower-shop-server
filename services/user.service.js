@@ -41,7 +41,9 @@ module.exports = class UserService extends BaseService {
         }
       }
 
-      type && (filters['type'] = type)
+      if (type != null && type != undefined) {
+        filters['type'] = type
+      }
       const total = await User.find(filters).sort(sorts)
       let result
       if (is_pagingParam) {

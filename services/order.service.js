@@ -193,7 +193,10 @@ module.exports = class OrderService extends BaseService {
       default:
         break;
     }
-    return result;
+    const total = result.reduce((sum, row)=>{
+      return sum + row.total_fee
+    }, 0)
+    return {result, total}
   }
   async getById(id) {
     const orderInfo = await Order.findById(id)
@@ -268,7 +271,28 @@ module.exports = class OrderService extends BaseService {
     }
     return {is_completed: false, msg:'Cập nhật thất bại'}
   }
+
+  async getComparison() {
+    const current_year = moment().year();
+    const last_year = current_year - 1;
+    const orderList = await Order.find()
+    let last_year_value = Array(12).fill(0);
+    let current_year_value = Array(12).fill(0);
+    orderList.forEach((item) => {
+      if (moment(item.receive_date, 'DD/MM/YYYY').year() === current_year) {
+        let index = moment(item.receive_date, 'DD/MM/YYYY').month()
+        current_year_value[index] += item.total_fee
+      }
+      if (moment(item.receive_date, 'DD/MM/YYYY').year() === last_year) {
+        let index = moment(item.receive_date, 'DD/MM/YYYY').month()
+        last_year_value[index] += item.total_fee
+      }
+
+    })
+    return {last_year:last_year_value, current_year:current_year_value}
+  }
 };
+
 const formatAmount = (amount) => {
   const handleAmount = amount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   return handleAmount;
