@@ -151,7 +151,7 @@ module.exports = class OrderService extends BaseService {
     }
     catch (err) {
       console.log(err.message)
-      throw Error(error)
+      throw Error(err)
     }
   }
 
