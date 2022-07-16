@@ -86,7 +86,7 @@ module.exports = class OrderService extends BaseService {
       .then(async json => {
         console.log('end2', json)
         if (json.code == 400) {
-          return {is_completed: false, msg:json.code_message_value}
+          throw new Error({is_completed: false, msg: "Giao dịch thất bại"})
         }
         else if (json.code == 200) {
           //Begin==Create Order//
