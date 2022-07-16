@@ -85,7 +85,10 @@ module.exports = class OrderService extends BaseService {
       .then(res => res.json())
       .then(async json => {
         console.log('end2', json)
-        if (json.code == 200) {
+        if (json.code == 400) {
+          return {is_completed: false, msg:json.code_message_value}
+        }
+        else if (json.code == 200) {
           //Begin==Create Order//
           const orderInfo = await Order.create({
             order_code: json.data.order_code,
