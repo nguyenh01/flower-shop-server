@@ -158,29 +158,41 @@ module.exports = class OrderService extends BaseService {
     }
   }
 
-  async getTotal(option = 'day') {
-    console.log('hello2')
-    const currentDate = moment();
+  async getTotal({option = 'day', selectedDate = moment()}) {
+    const dateParams = moment(selectedDate, 'DD/MM/YYYY')
     const total_order = await Order.find({status:2})
+    // const today = moment();
+    const from_date = moment(dateParams).startOf('week')
+    const to_date = moment(dateParams).endOf('week');
     let result;
-    total_order.map((item) => {
-      console.log(item.completed_date)
-    })
     switch(option) {
       case 'day':
-        result = total_order.filter((element) => {currentDate.isSame(moment(element.completed_date))})
+        result = total_order.filter((element) => {
+          return dateParams.isSame(moment(element.receive_date, 'DD/MM/YYYY'), 'day')
+          && dateParams.isSame(moment(element.receive_date, 'DD/MM/YYYY'), 'month')
+          && dateParams.isSame(moment(element.receive_date, 'DD/MM/YYYY'), 'year')
+        })
+        break;
+      case 'week':
+        result = total_order.filter((element) => {
+          console.log(moment(element.receive_date, 'DD/MM/YYYY'), from_date, to_date, moment(element.receive_date, 'DD/MM/YYYY').isBetween(from_date, to_date))
+          return moment(element.receive_date, 'DD/MM/YYYY').isBetween(from_date, to_date)
+        })
         break;
       case 'month':
-        result = total_order.filter((element) => {currentDate.isSame(moment(element.completed_date), 'year') && currentDate.isSame(moment(element.completed_date), 'month')})
+        result = total_order.filter((element) => {
+          return dateParams.isSame(moment(element.receive_date, 'DD/MM/YYYY'), 'month')
+          && dateParams.isSame(moment(element.receive_date, 'DD/MM/YYYY'), 'year')
+        })
         break;
       case 'year':
-        result = total_order.filter((element) => {currentDate.isSame(moment(element.completed_date), 'year')})
+        result = total_order.filter((element) => {
+          return  dateParams.isSame(moment(element.receive_date, 'DD/MM/YYYY'), 'year')
+        })
         break;
       default:
         break;
     }
-
-    console.log('this is result', result)
     return result;
   }
   async getById(id) {
@@ -250,7 +262,7 @@ module.exports = class OrderService extends BaseService {
     if (status == 2) {
       receive_date = moment().utcOffset(420).format('DD/MM/YYYY')
     }
-    const result = await Order.updateOne({_id: id}, {status, receive_date})
+    const result = await Order.updateOne({_id: id}, {status: status, receive_date: receive_date})
     if (result) {
       return {is_completed: true, msg: "Cập nhật thành công"}
     }
