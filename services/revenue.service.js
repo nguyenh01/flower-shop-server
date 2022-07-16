@@ -16,7 +16,7 @@ module.exports = class StatisticalService extends BaseService {
   async get ({option, selectedDate}) {
     const result = await OrderService.getTotal({option, selectedDate})
     const total = result.reduce((sum, row)=>{
-      return sum + row.product_fee
+      return sum + row.total_fee
     }, 0)
     return {result, total}
   }
