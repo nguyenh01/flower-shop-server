@@ -247,7 +247,7 @@ module.exports = class OrderService extends BaseService {
       return {is_completed: false, msg:'Bạn không có quyền hủy đơn hàng này'}
     }
     let receive_date;
-    if (status == 3) {
+    if (status == 2) {
       receive_date = moment().utcOffset(420).format('DD/MM/YYYY')
     }
     const result = await Order.updateOne({_id: id}, {status}, {receive_date})
