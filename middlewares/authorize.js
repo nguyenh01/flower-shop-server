@@ -87,13 +87,13 @@ module.exports = {
 
     verifyAccessSocketToken (token) {
         return new Promise((resolve, reject) => {
-            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, payload)=>{
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload)=>{
                 try{
                     if(err) reject(err); //Catch invalid token
                     return resolve(payload)
                 }
-                catch(err){
-                    console.log(err.message)
+                catch(error){
+                    console.log(error.message)
                     reject(createError.InternalServerError());
                 }
             })
