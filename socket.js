@@ -35,13 +35,13 @@ const messageDisplay = (message)=>{
 
 
 //Middleware
-io.use((socket, next)=>{
+io.use(async (socket, next)=>{
     const token = socket.handshake.auth.token
     if(!token){
         return next(new Error('Require token'))
     }
 
-    const payload = authorize.verifyAccessSocketToken(token)
+    const payload = await authorize.verifyAccessSocketToken(token)
     console.log('this is payload', payload)
     if(!payload){
         console.log('payload fail')
