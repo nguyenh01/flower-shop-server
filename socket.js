@@ -1,5 +1,5 @@
 const { Server } = require('socket.io')
-const MessageServices = require('./services/message.service')
+const MessageServices = require('./services/message.service').getInstance()
 const io = new Server()
 const authorize = require('./middlewares/authorize.js')
 const User = require('./models/user.model.js')
