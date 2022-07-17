@@ -84,6 +84,26 @@ module.exports = {
             next();
         })
     },
+
+    verifyAccessSocketToken (token) {
+        ///Verify token
+        return new Promise(async (resolve, reject) => {
+            await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) =>{
+                console.log('this is verify')
+                if(err) {
+                    console.log('this is error', err)
+                    if(err.name === 'JsonWebTokenError')
+                    {
+                        return next(createError.Unauthorized())
+                    }
+                    return next(createError.Unauthorized(err.message));
+                    }
+                console.log('this is payload', payload)
+                req.payload = payload
+                next();
+            })
+        })
+    },
     
     async signRefreshToken (userId, type) {
         return new Promise((resolve, reject) => {

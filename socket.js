@@ -35,55 +35,54 @@ const messageDisplay = (message)=>{
 
 
 //Middleware
-// io.use((socket, next)=>{
-//     const token = socket.handshake.auth.token
-//     if(!token){
-//         return next(new Error('Require token'))
-//     }
+io.use((socket, next)=>{
+    const token = socket.handshake.auth.token
+    if(!token){
+        return next(new Error('Require token'))
+    }
 
-//     const payload = authorize.verifyAccessToken(token)
-//     console.log('this is payload', payload)
-//     if(!payload){
-//         console.log('payload fail')
-//         return next(new Error('Token invalid'))
-//     }
-//     socket.user = payload
-//     next()
-// })
+    const payload = authorize.verifyAccessSocketToken(token)
+    console.log('this is payload', payload)
+    if(!payload){
+        console.log('payload fail')
+        return next(new Error('Token invalid'))
+    }
+    socket.user = payload
+    next()
+})
 
 
 
 io.on('connection', async socket =>{
-    console.log('connected')
-    // if(socket.user.type === 0 ){
-    //     socket.join(socket.user.id)
-    // }else{
-    //     const onlineCustomerIdList = (await User.find({type:0})).map(user => user.id)
-    //     socket.join(onlineCustomerIdList)
-    // }
+    if(socket.user.type === 0 ){
+        socket.join(socket.user.id)
+    }else{
+        const onlineCustomerIdList = (await User.find({type:0})).map(user => user.id)
+        socket.join(onlineCustomerIdList)
+    }
 
-    // socket.use((event, next)=>{
-    //     console.log(event)
-    //     next()
-    // })
+    socket.use((event, next)=>{
+        console.log(event)
+        next()
+    })
 
-    // //Define event for each socket
-    // socket.on('sendMessageToCustomer', async (content, customerId)=>{
-    //     const {id: workerId} = socket.user
-    //     const message = await MessageServices.sendMessage(customerId, workerId, content)
-    //     io.to(customerId).emit('receiveMessageFormStore',messageDisplay(message))
-    // })
+    //Define event for each socket
+    socket.on('sendMessageToCustomer', async (content, customerId)=>{
+        const {id: workerId} = socket.user
+        const message = await MessageServices.sendMessage(customerId, workerId, content)
+        io.to(customerId).emit('receiveMessageFormStore',messageDisplay(message))
+    })
 
-    // socket.on('sendMessageToStore', async (content)=>{
-    //     const {id:customerId} = socket.user
-    //     const message = await MessageServices.sendMessage(customerId, customerId, content)
-    //     io.to(customerId).emit('receiveMessageFormCustomer',messageDisplay(message))
-    // })
+    socket.on('sendMessageToStore', async (content)=>{
+        const {id:customerId} = socket.user
+        const message = await MessageServices.sendMessage(customerId, customerId, content)
+        io.to(customerId).emit('receiveMessageFormCustomer',messageDisplay(message))
+    })
 
-    // socket.on('readMessages', async (customerId)=>{
-    //     const {id:readerId} = socket.user
-    //     await MessageServices.readMessages(customerId, readerId)
-    // })
+    socket.on('readMessages', async (customerId)=>{
+        const {id:readerId} = socket.user
+        await MessageServices.readMessages(customerId, readerId)
+    })
 })
 
 module.exports = {
