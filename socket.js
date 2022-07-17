@@ -71,13 +71,14 @@ io.on('connection', async socket =>{
     socket.on('sendMessageToCustomer', async (content, customerId)=>{
         const {id: workerId} = socket.user
         const message = await MessageServices.sendMessage(customerId, workerId, content)
-        io.to(customerId).emit('receiveMessageFormStore',messageDisplay(message))
+        io.to(customerId).emit('receiveMessageFormStore', message)
     })
 
     socket.on('sendMessageToStore', async (content)=>{
         const {id:customerId} = socket.user
+        console.log('this is id :::::::::::::::::::::::::::::::', id)
         const message = await MessageServices.sendMessage(customerId, customerId, content)
-        io.to(customerId).emit('receiveMessageFormCustomer',messageDisplay(message))
+        io.to(customerId).emit('receiveMessageFormCustomer', message)
     })
 
     socket.on('readMessages', async (customerId)=>{
