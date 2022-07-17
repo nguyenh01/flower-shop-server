@@ -6,7 +6,7 @@ module.exports = (router) => {
   router.get('/', authorize.verifyAccessToken,
     async (req, res, next) => {
       try {
-        const userId = req.payload._id
+        const userId = req.payload.id
         const message = await MessageServices.getMessagesByCustomerId(userId)
         return res.status(200).json({ 
           message
