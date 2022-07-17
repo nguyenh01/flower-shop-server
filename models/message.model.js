@@ -1,6 +1,9 @@
-const mongoose = require('mongoose')
 
-const schema = new mongoose.Schema({
+const mongoose = require('mongoose');
+const schema = mongoose.Schema;
+const {mongo} = require('../connections/mongo')
+
+const MessageSchema = new schema({
     customer: {type: mongoose.Types.ObjectId, ref:'user'},
     sender: {type: mongoose.Types.ObjectId, ref:'user'},
     content: {type: String, required:true},
@@ -11,4 +14,4 @@ const schema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Message', schema)
+module.exports = mongo.model('message', MessageSchema)
