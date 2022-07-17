@@ -76,7 +76,7 @@ io.on('connection', async socket =>{
 
     socket.on('sendMessageToStore', async (content)=>{
         const {id:customerId} = socket.user
-        console.log('this is id :::::::::::::::::::::::::::::::', id)
+        console.log('this is id :::::::::::::::::::::::::::::::', customerId)
         const message = await MessageServices.sendMessage(customerId, customerId, content)
         io.to(customerId).emit('receiveMessageFormCustomer', message)
     })
