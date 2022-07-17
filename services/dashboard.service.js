@@ -17,8 +17,8 @@ module.exports = class DashBoardService extends BaseService {
 
   async get () {
     const total_day=  (await OrderService.getTotal({option: "day"})).total
-    const total_week=  (await OrderService.getTotal({option: "month"})).total
-    const total_month=  (await OrderService.getTotal({option: "week"})).total
+    const total_week=  (await OrderService.getTotal({option: "week"})).total
+    const total_month=  (await OrderService.getTotal({option: "month"})).total
     const total_year=  (await OrderService.getTotal({option: "year"})).total
     const total_employee = (await UserService.list({is_paging: false, type: 2})).length
     const total_customer = (await UserService.list({is_paging: false, type: 0})).length
