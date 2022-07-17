@@ -35,25 +35,26 @@ const messageDisplay = (message)=>{
 
 
 //Middleware
-io.use((socket, next)=>{
-    const token = socket.handshake.auth.token
-    if(!token){
-        return next(new Error('Require token'))
-    }
+// io.use((socket, next)=>{
+//     const token = socket.handshake.auth.token
+//     if(!token){
+//         return next(new Error('Require token'))
+//     }
 
-    const payload = authorize.verifyAccessToken(token)
-    console.log('this is payload', payload)
-    if(!payload){
-        console.log('payload fail')
-        return next(new Error('Token invalid'))
-    }
-    socket.user = payload
-    next()
-})
+//     const payload = authorize.verifyAccessToken(token)
+//     console.log('this is payload', payload)
+//     if(!payload){
+//         console.log('payload fail')
+//         return next(new Error('Token invalid'))
+//     }
+//     socket.user = payload
+//     next()
+// })
 
 
 
 io.on('connection', async socket =>{
+    console.log("connected")
     if(socket.user.type === 0 ){
         socket.join(socket.user.id)
     }else{
