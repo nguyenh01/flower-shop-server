@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
-    customer: {type: mongoose.Types.ObjectId, ref:'User'},
-    sender: {type: mongoose.Types.ObjectId, ref:'User'},
+    customer: {type: mongoose.Types.ObjectId, ref:'user'},
+    sender: {type: mongoose.Types.ObjectId, ref:'user'},
     content: {type: String, required:true},
     wasRead: {type: Boolean, default:false},
 },{
