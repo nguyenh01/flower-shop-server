@@ -86,11 +86,12 @@ module.exports = {
     },
 
     verifyAccessSocketToken (token) {
+        ///Verify token
         return new Promise((resolve, reject) => {
             jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload)=>{
                 try{
-                    if(err) reject(err); //Catch invalid token
-                    return resolve(payload)
+                    req.payload = payload
+                    return reject(createError.Unauthorized()); //Check token isexist in redis db
                 }
                 catch(error){
                     console.log(error.message)
