@@ -163,6 +163,7 @@ module.exports = class OrderService extends BaseService {
     const total_order = await Order.find({status:2})
     // const today = moment();
     const from_date = moment(dateParams).startOf('week')
+    console.log('this is from_date', from_date)
     const to_date = moment(dateParams).endOf('week');
     let result;
     switch(option) {
@@ -175,9 +176,9 @@ module.exports = class OrderService extends BaseService {
         break;
       case 'week':
         result = total_order.filter((element) => {
-          console.log(moment(element.receive_date, 'DD/MM/YYYY'), from_date, to_date, moment(element.receive_date, 'DD/MM/YYYY').isBetween(from_date, to_date))
           return moment(element.receive_date, 'DD/MM/YYYY').isBetween(from_date, to_date)
         })
+        console.log('this is result', result)
         break;
       case 'month':
         result = total_order.filter((element) => {

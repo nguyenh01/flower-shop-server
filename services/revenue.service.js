@@ -14,6 +14,7 @@ module.exports = class RevenueService extends BaseService {
 
 
   async get ({option, selectedDate}) {
+    console.log('this is option', option)
     const result = await OrderService.getTotal({option, selectedDate})
     return result
   }
