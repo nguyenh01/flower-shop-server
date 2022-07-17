@@ -12,7 +12,6 @@ module.exports = (router) => {
                 }
                 const result = await DashBoardService.get()
 
-                console.log('this is result:::::::::::', result)
                 return res.status(200).json(result)
             }
             catch (error) {

@@ -99,7 +99,7 @@ module.exports = (router) => {
         //     expiresIn: 86400, // expires in 24 hours
         //   }
         // );
-        const token = await authorize.signAccessToken(user._id)
+        const token = await authorize.signAccessToken(user._id, user.type)
         const refreshToken = await authorize.signRefreshToken(user._id)
 
         res.cookie("jwt", token, { maxAge: 86400 });
@@ -220,9 +220,9 @@ module.exports = (router) => {
           
       }
       
-      const {userId} = await authorize.verifyRefreshToken(refreshToken);
-      const accessToken = await authorize.signAccessToken(userId);
-      const newRefreshToken = await authorize.signRefreshToken(userId);
+      const {userId, type} = await authorize.verifyRefreshToken(refreshToken);
+      const accessToken = await authorize.signAccessToken(userId, type);
+      const newRefreshToken = await authorize.signRefreshToken(userId, type);
       res.json({accessToken, refreshToken:newRefreshToken});
   }
   catch(error)

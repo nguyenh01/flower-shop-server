@@ -36,10 +36,11 @@ module.exports = {
     //     ];
     // },
 
-    async signAccessToken (id) {
+    async signAccessToken (id, type) {
         return new Promise((resolve, reject) => {
             const payload = {
-                id
+                id,
+                type,
             }
             const secret = process.env.ACCESS_TOKEN_SECRET;
             const options = {
@@ -84,10 +85,10 @@ module.exports = {
         })
     },
     
-    async signRefreshToken (userId) {
+    async signRefreshToken (userId, type) {
         return new Promise((resolve, reject) => {
             const payload = {
-                userId
+                userId, type
             }
             const secret = process.env.REFRESH_TOKEN_SECRET;
             const options = {
@@ -99,7 +100,7 @@ module.exports = {
                     let refresh_token =  new RefreshToken({
                         id: userId.toString(),
                         token,
-                        expire: moment().add(365, 'days')
+                        expire: moment().add(365, 'days'), type
                     })
                     let delete_old_refresh_token = await RefreshToken.deleteMany({id: userId.toString()})
                     let save_refresh_token = await refresh_token.save()
