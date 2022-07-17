@@ -88,15 +88,19 @@ module.exports = {
     verifyAccessSocketToken (token) {
         ///Verify token
         return new Promise((resolve, reject) => {
-            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload)=>{
-                try{
-                    req.payload = payload
-                    return reject(createError.Unauthorized()); //Check token isexist in redis db
-                }
-                catch(error){
-                    console.log(error.message)
-                    reject(createError.InternalServerError());
-                }
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) =>{
+                console.log('this is verify')
+                if(err) {
+                    console.log('this is error', err)
+                    if(err.name === 'JsonWebTokenError')
+                    {
+                        return next(createError.Unauthorized())
+                    }
+                    return next(createError.Unauthorized(err.message));
+                    }
+                console.log('this is payload', payload)
+                req.payload = payload
+                next();
             })
         })
     },
