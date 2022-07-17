@@ -1,6 +1,4 @@
-const validator = require('../middlewares/validator')
 const MessageServices = require('../services/message.service').getInstance()
-const ProductService = require('../services/product.service').getInstance()
 const authorize = require("../middlewares/authorize.js");
 
 

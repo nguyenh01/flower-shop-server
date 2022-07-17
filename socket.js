@@ -48,6 +48,7 @@ io.use(async (socket, next)=>{
         return next(new Error('Token invalid'))
     }
     socket.user = payload
+    console.log('this is socket.user', socket.user)
     next()
 })
 
