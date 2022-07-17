@@ -54,36 +54,36 @@ const messageDisplay = (message)=>{
 
 
 io.on('connection', async socket =>{
-    console.log("connected")
-    if(socket.user.type === 0 ){
-        socket.join(socket.user.id)
-    }else{
-        const onlineCustomerIdList = (await User.find({type:0})).map(user => user.id)
-        socket.join(onlineCustomerIdList)
-    }
+    console.log('connected')
+    // if(socket.user.type === 0 ){
+    //     socket.join(socket.user.id)
+    // }else{
+    //     const onlineCustomerIdList = (await User.find({type:0})).map(user => user.id)
+    //     socket.join(onlineCustomerIdList)
+    // }
 
-    socket.use((event, next)=>{
-        console.log(event)
-        next()
-    })
+    // socket.use((event, next)=>{
+    //     console.log(event)
+    //     next()
+    // })
 
-    //Define event for each socket
-    socket.on('sendMessageToCustomer', async (content, customerId)=>{
-        const {id: workerId} = socket.user
-        const message = await MessageServices.sendMessage(customerId, workerId, content)
-        io.to(customerId).emit('receiveMessageFormStore',messageDisplay(message))
-    })
+    // //Define event for each socket
+    // socket.on('sendMessageToCustomer', async (content, customerId)=>{
+    //     const {id: workerId} = socket.user
+    //     const message = await MessageServices.sendMessage(customerId, workerId, content)
+    //     io.to(customerId).emit('receiveMessageFormStore',messageDisplay(message))
+    // })
 
-    socket.on('sendMessageToStore', async (content)=>{
-        const {id:customerId} = socket.user
-        const message = await MessageServices.sendMessage(customerId, customerId, content)
-        io.to(customerId).emit('receiveMessageFormCustomer',messageDisplay(message))
-    })
+    // socket.on('sendMessageToStore', async (content)=>{
+    //     const {id:customerId} = socket.user
+    //     const message = await MessageServices.sendMessage(customerId, customerId, content)
+    //     io.to(customerId).emit('receiveMessageFormCustomer',messageDisplay(message))
+    // })
 
-    socket.on('readMessages', async (customerId)=>{
-        const {id:readerId} = socket.user
-        await MessageServices.readMessages(customerId, readerId)
-    })
+    // socket.on('readMessages', async (customerId)=>{
+    //     const {id:readerId} = socket.user
+    //     await MessageServices.readMessages(customerId, readerId)
+    // })
 })
 
 module.exports = {
