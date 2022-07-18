@@ -212,7 +212,7 @@ module.exports = (router) => {
     }
   });
 
-  router.get("/refresh-token", async (req, res, next) => {
+  router.post("/refresh-token", async (req, res, next) => {
     try{
       const {refreshToken} = req.body
       if(!refreshToken){
