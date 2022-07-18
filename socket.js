@@ -93,7 +93,7 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("typing", (data) => {
-    if (data.typing == true) io.emit("display", data);
+    if (data.typing) io.emit("display", data);
     else io.emit("display", data);
   });
 });
